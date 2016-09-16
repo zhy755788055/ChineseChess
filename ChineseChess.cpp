@@ -1,6 +1,3 @@
-// duan.cpp : Defines the class behaviors for the application.
-//
-
 #include "stdafx.h"
 #include "ChineseChess.h"
 #include "ChineseChessDlg.h"
@@ -11,11 +8,8 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-/////////////////////////////////////////////////////////////////////////////
-// CDuanApp
-
 BEGIN_MESSAGE_MAP(CChineseChessApp, CWinApp)
-	//{{AFX_MSG_MAP(CDuanApp)
+	//{{AFX_MSG_MAP(CChineseChess)
 		// NOTE - the ClassWizard will add and remove mapping macros here.
 		//    DO NOT EDIT what you see in these blocks of generated code!
 	//}}AFX_MSG

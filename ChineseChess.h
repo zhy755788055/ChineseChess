@@ -1,6 +1,3 @@
-// duan.h : main header file for the DUAN application
-//
-
 #if !defined(AFX_DUAN_H__0714199D_D7D3_4AE6_A52F_03431F096ACF__INCLUDED_)
 #define AFX_DUAN_H__0714199D_D7D3_4AE6_A52F_03431F096ACF__INCLUDED_
 
@@ -46,4 +43,4 @@ public:
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 
-#endif // !defined(AFX_DUAN_H__0714199D_D7D3_4AE6_A52F_03431F096ACF__INCLUDED_)
+#endif

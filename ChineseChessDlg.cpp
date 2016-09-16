@@ -27,7 +27,7 @@ CChineseChessDlg::CChineseChessDlg(CWnd* pParent /*=NULL*/)
 void CChineseChessDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CDuanDlg)
+	//{{AFX_DATA_MAP(CChineseChessDlg)
 	DDX_Control(pDX, IDC_RED_TIMEPASS, m_RedTimePass_Ctr);
 	DDX_Control(pDX, IDC_RED_TIMELEFT, m_RedTimeLeft_Ctr);
 	DDX_Control(pDX, IDC_BLK_TIMEPASS, m_BlkTimePass_Ctr);
@@ -37,10 +37,8 @@ void CChineseChessDlg::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CChineseChessDlg, CDialog)
-	//{{AFX_MSG_MAP(CDuanDlg)
-	ON_WM_SYSCOMMAND()
+	//{{AFX_MSG_MAP(CChineseChessDlg)
 	ON_WM_PAINT()
-	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDC_BUT_BEGIN, OnButBegin)
 	ON_WM_LBUTTONDOWN()
 	ON_COMMAND(IDM_LET_COMPUTERTHINK, OnLetComputerThink)
@@ -52,27 +50,11 @@ BOOL CChineseChessDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
-	ASSERT((IDM_ABOUTBOX & 0xFFF0) == IDM_ABOUTBOX);
-	ASSERT(IDM_ABOUTBOX < 0xF000);
-
-	CMenu* pSysMenu = GetSystemMenu(FALSE);
-	if (pSysMenu != NULL)
-	{
-		CString strAboutMenu;
-		strAboutMenu.LoadString(IDS_ABOUTBOX);
-		if (!strAboutMenu.IsEmpty())
-		{
-			pSysMenu->AppendMenu(MF_SEPARATOR);
-			pSysMenu->AppendMenu(MF_STRING, IDM_ABOUTBOX, strAboutMenu);
-		}
-	}
-
 	// Set the icon for this dialog.  The framework does this automatically
 	//  when the application's main window is not a dialog
 	SetIcon(m_hIcon, TRUE);			// Set big icon
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 	
-	// TODO: Add extra initialization here
 	BITMAP BitMap;
 	m_BoardBmp.LoadBitmap(IDB_CHESSBOARD);
 	m_BoardBmp.GetBitmap(&BitMap);
@@ -98,18 +80,6 @@ BOOL CChineseChessDlg::OnInitDialog()
 	m_RedTimer = 0;
 
 	return TRUE;
-}
-
-void CChineseChessDlg::OnSysCommand(UINT nID, LPARAM lParam)
-{
-	if ((nID & 0xFFF0) == IDM_ABOUTBOX)
-	{
-
-	}
-	else
-	{
-		CDialog::OnSysCommand(nID, lParam);
-	}
 }
 
 void CChineseChessDlg::OnPaint() 
@@ -157,13 +127,6 @@ void CChineseChessDlg::OnPaint()
 	m_BoardBmp.DeleteObject();
 }
 
-// The system calls this to obtain the cursor to display while the user drags
-//  the minimized window.
-HCURSOR CChineseChessDlg::OnQueryDragIcon()
-{
-	return (HCURSOR) m_hIcon;
-}
-
 void CChineseChessDlg::OnButBegin() 
 {
 	InitData();
@@ -183,7 +146,7 @@ void CChineseChessDlg::OnButBegin()
 	m_tsRedTimePass = m_TotalTime - m_tsRedTimeLeft;
 	m_RedTimePass_Ctr.SetWindowText(m_tsRedTimePass.Format("%H:%M:%S"));
 
-	m_RedTimer = SetTimer(1,1000,NULL);
+	m_RedTimer = SetTimer(1, 1000, NULL);
 	m_gameState = REDTHINKING;
 }
 
@@ -194,14 +157,15 @@ BOOL CChineseChessDlg::IsPtInBoard(CPoint point)
 
 void CChineseChessDlg::OnLButtonDown(UINT nFlags, CPoint point) 
 {
-	if (!IsPtInBoard(point) || m_gameState!=REDTHINKING)
+	if (!IsPtInBoard(point) || m_gameState != REDTHINKING)
 	{
 		return;
 	}
 
 	int SideTag = 16 + m_HumanSide * 16;
 
-	short dest,from;
+	short dest;
+	short from;
 	int num;
 	
 	//清空高亮显示
@@ -222,7 +186,8 @@ void CChineseChessDlg::OnLButtonDown(UINT nFlags, CPoint point)
 
 	BYTE piece = m_interface[dest];
 
-	if (piece & SideTag) //选手选中本方棋子
+	//选手选中本方棋子
+	if (piece & SideTag) 
 	{
 		if (from != NOMOVE)
 		{
@@ -240,8 +205,8 @@ void CChineseChessDlg::OnLButtonDown(UINT nFlags, CPoint point)
 		{
 			move mv;
 			//将10*9的棋盘位置转换成16*16的棋盘位置
-			mv.from = ((from/9 +3) * 16 + from % 9 + 3);
-			mv.to = ((dest/9 +3) * 16 + dest % 9 + 3);
+			mv.from = ((from / 9 + 3) * 16 + from % 9 + 3);
+			mv.to = ((dest / 9 + 3) * 16 + dest % 9 + 3);
 
 			//走法合理性检验，源位置z，目的位置k
 			if (m_Board.LegalMove(mv)) 
@@ -298,9 +263,9 @@ void CChineseChessDlg::RequireDrawCell(short pos)
 
 CRect CChineseChessDlg::GetPieceRect(short pos)
 {
-	short x = BORDERWIDTH + (pos % 9)*GRILLEWIDTH;
-	short y = BORDERHEIGHT + (pos / 9)*GRILLEHEIGHT;
-	CRect rect(x, y, x+GRILLEWIDTH, y+GRILLEHEIGHT);
+	short x = BORDERWIDTH + (pos % 9) * GRILLEWIDTH;
+	short y = BORDERHEIGHT + (pos / 9) * GRILLEHEIGHT;
+	CRect rect(x, y, x + GRILLEWIDTH, y + GRILLEHEIGHT);
 	return rect;
 }
 
@@ -326,9 +291,8 @@ void CChineseChessDlg::OnLetComputerThink()
 		return;
 	}
 
-	short z,k;
-	z = m_Board.BestMove.from;
-	k = m_Board.BestMove.to;
+	short z = m_Board.BestMove.from;
+	short k = m_Board.BestMove.to;
 
 	if(z == 0)
 	{
@@ -343,11 +307,10 @@ void CChineseChessDlg::OnLetComputerThink()
 
 	int num;
 	m_Board.MakeMove(m_Board.BestMove);
-		
-	short zz,kk;
+
 	//清空高亮显示
-	zz = m_SelectMoveFrom;
-	kk = m_SelectMoveTo;
+	short zz = m_SelectMoveFrom;
+	short kk = m_SelectMoveTo;
 	m_SelectMoveFrom = NOMOVE;
 	m_SelectMoveTo = NOMOVE;
 	RequireDrawCell(zz); 
@@ -364,7 +327,7 @@ void CChineseChessDlg::OnLetComputerThink()
 	m_SelectMoveTo = kk;
 	RequireDrawCell(zz); 
 	RequireDrawCell(kk);
-	Beep(500,300);
+	Beep(500, 300);
 
 	m_tsBlkTimeLeft = m_TotalTime - m_tsBlkTimePass;
 	m_BlkTimeLeft_Ctr.SetWindowText(m_tsBlkTimeLeft.Format("%H:%M:%S"));
@@ -436,7 +399,6 @@ void CChineseChessDlg::InitData()
 		m_interface[i] = board[i];
 	}
 
-	m_ComputerSide = 1; 
 	m_HumanSide = 0;
 	m_gameState = GAMEOVER;
 }

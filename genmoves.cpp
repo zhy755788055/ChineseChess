@@ -74,7 +74,9 @@ int CBoard::Check(int lSide)
 	wKing = piece[16];
 	bKing = piece[32];
 	if(!wKing || !bKing)
+	{
 		return 0;
+	}
 
 	//检测将帅是否照面
 	r=1;
@@ -89,7 +91,9 @@ int CBoard::Check(int lSide)
 			}
 		}
 		if(r)
+		{
 			return r;	//将帅照面
+		}
 	}
 
 	q = piece[48-SideTag];	//lSide方将的位置
@@ -99,16 +103,20 @@ int CBoard::Check(int lSide)
 	unsigned char n;//下一步可能行走的位置
 	unsigned char m;//马腿位置
 	
-	for(i=5;i<=6;i++)
+	for(i = 5; i <= 6; i++)
 	{
 		p = piece[SideTag + i];
 		if(!p)
+		{
 			continue;
-		for(k=0; k<8; k++)//8个方向
+		}
+		for(k = 0; k < 8; k++)//8个方向
 		{
 			n = p + KnightDir[k];	//n为新的可能走到的位置
 			if(n!=q)
+			{
 				continue;
+			}
 
 			if(LegalPosition[fSide][n] & PositionMask[3])	//马将对应下标为3
 			{
@@ -127,11 +135,14 @@ int CBoard::Check(int lSide)
 	{
 		p = piece[SideTag + i];
 		if(!p)
-			continue;
-		if(p%16 == q%16)	//在同一纵线上
 		{
-			PosAdd = (p>q?-16:16);
-			for(p=p+PosAdd; p!=q; p = p+PosAdd)
+			continue;
+		}
+
+		if(p % 16 == q % 16)	//在同一纵线上
+		{
+			PosAdd = (p > q?-16:16);
+			for(p=p + PosAdd; p != q; p = p + PosAdd)
 			{
 				if(board[p])	//车将中间有子隔着
 				{
@@ -140,12 +151,14 @@ int CBoard::Check(int lSide)
 				}
 			}
 			if(r)
+			{
 				return r;
+			}
 		}
-		else if(p/16 ==q/16)	//在同一横线上
+		else if(p / 16 == q / 16)	//在同一横线上
 		{
-			PosAdd = (p>q?-1:1);
-			for(p=p+PosAdd; p!=q; p = p+PosAdd)
+			PosAdd = (p > q?-1:1);
+			for(p = p + PosAdd; p != q; p = p + PosAdd)
 			{
 				if(board[p])
 				{
@@ -154,7 +167,9 @@ int CBoard::Check(int lSide)
 				}
 			}
 			if(r)
+			{
 				return r;
+			}
 		}
 	}
 	
@@ -206,7 +221,7 @@ int CBoard::Check(int lSide)
 	}
 
 	//检测将是否被兵攻击
-	for(i=11;i<=15;i++)
+	for(i=11; i <= 15; i++)
 	{
 		p = piece[SideTag + i];
 		if(!p)
@@ -274,8 +289,12 @@ int CBoard::GenAllMove(move * MoveArray)
 		if(LegalPosition[side][n] & PositionMask[0])	//将对应下标为0
 		{
 			if( !(board[n] & SideTag))	//目标位置上没有本方棋子
+			{
 				if(SaveMove(p, n, mvArray))
+				{
 					mvArray++;
+				}
+			}
 		}
 	}
 
@@ -291,8 +310,12 @@ int CBoard::GenAllMove(move * MoveArray)
 			if(LegalPosition[side][n] & PositionMask[1])	//士将对应下标为1
 			{
 				if( !(board[n] & SideTag))	//目标位置上没有本方棋子
+				{
 					if(SaveMove(p, n, mvArray))
+					{
 						mvArray++;
+					}
+				}
 			}
 		}
 	}
@@ -312,8 +335,12 @@ int CBoard::GenAllMove(move * MoveArray)
 				if(!board[m])	//象眼位置无棋子占据
 				{
 					if( !(board[n] & SideTag))	//目标位置上没有本方棋子
+					{
 						if(SaveMove(p, n, mvArray))
+						{
 							mvArray++;
+						}
+					}
 				}
 			}
 		}
@@ -324,8 +351,10 @@ int CBoard::GenAllMove(move * MoveArray)
 	{
 		p = piece[SideTag + i];
 		if(!p)
+		{
 			continue;
-		for(k=0; k<8; k++)//8个方向
+		}
+		for(k = 0; k < 8; k++)//8个方向
 		{
 			n = p + KnightDir[k];	//n为新的可能走到的位置
 			if(LegalPosition[side][n] & PositionMask[3])	//马将对应下标为3
@@ -334,37 +363,51 @@ int CBoard::GenAllMove(move * MoveArray)
 				if(!board[m])	//马腿位置无棋子占据
 				{
 					if( !(board[n] & SideTag))	//目标位置上没有本方棋子
+					{
 						if(SaveMove(p, n, mvArray))
+						{
 							mvArray++;
+						}
+					}
 				}
 			}
 		}
 	}
 
 	//车的走法
-	for(i=7; i<=8; i++)
+	for(i = 7; i <= 8; i++)
 	{
 		p = piece[SideTag + i];
 		if(!p)
-			continue;
-		for(k=0; k<4; k++)	//4个方向
 		{
-			for(j=1; j<10; j++)	//横的最多有8个可能走的位置，纵向最多有9个位置
+			continue;
+		}
+		for(k = 0; k < 4; k++)	//4个方向
+		{
+			for(j = 1; j < 10; j++)	//横的最多有8个可能走的位置，纵向最多有9个位置
 			{
 				n = p + j * RookDir[k];
 				if(!(LegalPosition[side][n] & PositionMask[4]))	//车士将对应下标为4
+				{
 					break;//不合理的位置
+				}
 				if(! board[n] )	//目标位置上无子
 				{
 					if(SaveMove(p, n, mvArray))
+					{
 						mvArray++;
+					}
 				}
 				else if ( board[n] & SideTag)	//目标位置上有本方棋子
+				{
 					break;
+				}
 				else	//目标位置上有对方棋子
 				{
 					if(SaveMove(p, n, mvArray))
+					{
 						mvArray++;
+					}
 					break;
 				}
 			}

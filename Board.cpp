@@ -140,8 +140,12 @@ void CBoard::StringToArray(const char *FenStr)
 	}
   	str ++;
   
-	if (*str == 'b') 
+	if (*str == 'b')
+	{
 		side = 1;
+	}
 	else
+	{
 		side = 0;
+	}
 }

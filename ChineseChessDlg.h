@@ -11,14 +11,16 @@
 #define	SIZE_X			9
 #define	SIZE_Y			10
 #define BOARD_SIZE		SIZE_X*SIZE_Y
-#define NOMOVE				-1
+#define NOMOVE			-1
 #define EMPTY			7
 #define BLACK			1
 #define RED				0
+
 //m_gameState的三种状态
 #define REDTHINKING		0
 #define BLACKTHINKING	1
 #define GAMEOVER		2
+
 //自定义消息
 #define IDM_LET_COMPUTERTHINK WM_USER + 100
 
@@ -44,7 +46,6 @@ public:
 	CStatic	m_RedTimeLeft_Ctr;
 	CStatic	m_BlkTimePass_Ctr;
 	CStatic	m_BlkTimeLeft_Ctr;
-	CButton	m_ButExit;
 	CButton	m_ButBegin;
 	//}}AFX_DATA
 
@@ -58,9 +59,7 @@ protected:
 	HICON m_hIcon;
 	//{{AFX_MSG(CChineseChessDlg)
 	virtual BOOL OnInitDialog();
-	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg void OnPaint();
-	afx_msg HCURSOR OnQueryDragIcon();
 	afx_msg void OnButBegin();
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnLetComputerThink();
@@ -89,7 +88,6 @@ private:
 	CRect rectBoard;				//棋盘矩形框
 	short m_SelectMoveFrom;			//一个走法的起始点，用于高亮显示
 	short m_SelectMoveTo;
-	short m_ComputerSide; 
 	short m_HumanSide;
 	BYTE  m_interface[BOARD_SIZE];	//棋盘数组，保存的棋子
 	short m_gameState;				//棋局状态，结束/红方/黑方
