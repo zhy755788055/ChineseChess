@@ -1,5 +1,3 @@
-// duanDlg.cpp : implementation file
-//
 #include "stdafx.h"
 #include "ChineseChess.h"
 #include "ChineseChessDlg.h"
@@ -10,8 +8,6 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-/////////////////////////////////////////////////////////////////////////////
-// CAboutDlg dialog used for App About
 #define BORDERWIDTH	 13	//棋盘(左右)边缘的宽度
 #define BORDERHEIGHT 15	//棋盘(上下)边缘的高度
 #define GRILLEWIDTH  35 //棋盘上每个格子的高度
@@ -20,58 +16,9 @@ static char THIS_FILE[] = __FILE__;
 #define RedTime 1
 #define BlkTime 2
 
-class CAboutDlg : public CDialog
-{
-public:
-	CAboutDlg();
-
-// Dialog Data
-	//{{AFX_DATA(CAboutDlg)
-	enum { IDD = IDD_ABOUTBOX };
-	//}}AFX_DATA
-
-	// ClassWizard generated virtual function overrides
-	//{{AFX_VIRTUAL(CAboutDlg)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-	//}}AFX_VIRTUAL
-
-// Implementation
-protected:
-	//{{AFX_MSG(CAboutDlg)
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
-};
-
-CAboutDlg::CAboutDlg() : CDialog(CAboutDlg::IDD)
-{
-	//{{AFX_DATA_INIT(CAboutDlg)
-	//}}AFX_DATA_INIT
-}
-
-void CAboutDlg::DoDataExchange(CDataExchange* pDX)
-{
-	CDialog::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CAboutDlg)
-	//}}AFX_DATA_MAP
-}
-
-BEGIN_MESSAGE_MAP(CAboutDlg, CDialog)
-	//{{AFX_MSG_MAP(CAboutDlg)
-		// No message handlers
-	//}}AFX_MSG_MAP
-END_MESSAGE_MAP()
-
-/////////////////////////////////////////////////////////////////////////////
-// CDuanDlg dialog
-
 CChineseChessDlg::CChineseChessDlg(CWnd* pParent /*=NULL*/)
 : CDialog(CChineseChessDlg::IDD, pParent)
 {
-	//{{AFX_DATA_INIT(CDuanDlg)
-		// NOTE: the ClassWizard will add member initialization here
-	//}}AFX_DATA_INIT
-	// Note that LoadIcon does not require a subsequent DestroyIcon in Win32
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 	m_SelectMoveFrom = NOMOVE;
 	m_SelectMoveTo = NOMOVE;
@@ -85,7 +32,6 @@ void CChineseChessDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_RED_TIMELEFT, m_RedTimeLeft_Ctr);
 	DDX_Control(pDX, IDC_BLK_TIMEPASS, m_BlkTimePass_Ctr);
 	DDX_Control(pDX, IDC_BLK_TIMELEFT, m_BlkTimeLeft_Ctr);
-	DDX_Control(pDX, IDC_BUTTON_CLOSE, m_ButExit);
 	DDX_Control(pDX, IDC_BUT_BEGIN, m_ButBegin);
 	//}}AFX_DATA_MAP
 }
@@ -99,20 +45,13 @@ BEGIN_MESSAGE_MAP(CChineseChessDlg, CDialog)
 	ON_WM_LBUTTONDOWN()
 	ON_COMMAND(IDM_LET_COMPUTERTHINK, OnLetComputerThink)
 	ON_WM_TIMER()
-	ON_BN_CLICKED(IDC_BUTTON_CLOSE, OnButtonClose)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
-
-/////////////////////////////////////////////////////////////////////////////
-// CDuanDlg message handlers
 
 BOOL CChineseChessDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
-	// Add "About..." menu item to system menu.
-
-	// IDM_ABOUTBOX must be in the system command range.
 	ASSERT((IDM_ABOUTBOX & 0xFFF0) == IDM_ABOUTBOX);
 	ASSERT(IDM_ABOUTBOX < 0xF000);
 
@@ -144,9 +83,9 @@ BOOL CChineseChessDlg::OnInitDialog()
 	m_Chessman.Create(IDB_CHESSMAN, 31, 15, RGB(0,128,128)); 
 
 	rectBoard.left = BORDERWIDTH;
-	rectBoard.right = BORDERWIDTH + GRILLEWIDTH*9;
+	rectBoard.right = BORDERWIDTH + GRILLEWIDTH * 9;
 	rectBoard.top = BORDERHEIGHT;
-	rectBoard.bottom = BORDERHEIGHT + GRILLEHEIGHT*10;
+	rectBoard.bottom = BORDERHEIGHT + GRILLEHEIGHT * 10;
 
 	m_BlkTimeLeft_Ctr.SetWindowText("");
 	m_BlkTimePass_Ctr.SetWindowText("");
@@ -154,7 +93,7 @@ BOOL CChineseChessDlg::OnInitDialog()
 	m_RedTimePass_Ctr.SetWindowText("");
 
 	InitData();
-	m_TotalTime = CTimeSpan(0,0,30,0);
+	m_TotalTime = CTimeSpan(0, 0, 30, 0);
 	m_BlkTimer = 0;
 	m_RedTimer = 0;
 
@@ -165,8 +104,7 @@ void CChineseChessDlg::OnSysCommand(UINT nID, LPARAM lParam)
 {
 	if ((nID & 0xFFF0) == IDM_ABOUTBOX)
 	{
-		CAboutDlg dlgAbout;
-		dlgAbout.DoModal();
+
 	}
 	else
 	{
@@ -185,24 +123,24 @@ void CChineseChessDlg::OnPaint()
 	MemDC.CreateCompatibleDC( &dc );
 	m_BoardBmp.LoadBitmap(IDB_CHESSBOARD);
 	pOldBmp = MemDC.SelectObject(&m_BoardBmp);
-	for (short i=0; i<90; i++)
+	for (short i=0; i < 90; i++)
 	{
 		if (m_interface[i] == 0)
 		{
 			if(i == m_SelectMoveFrom)
 			{
-				pt.x = (i % 9)*GRILLEHEIGHT + BORDERWIDTH ;
-				pt.y = (i / 9)*GRILLEWIDTH + BORDERHEIGHT;
+				pt.x = (i % 9) * GRILLEHEIGHT + BORDERWIDTH ;
+				pt.y = (i / 9) * GRILLEWIDTH + BORDERHEIGHT;
 				m_Chessman.Draw(&MemDC, 14, pt, ILD_TRANSPARENT);
 			}
-				continue;
+			continue;
 		}
-		pt.x = (i % 9)*GRILLEHEIGHT + BORDERWIDTH ;
-		pt.y = (i / 9)*GRILLEWIDTH + BORDERHEIGHT;
+		pt.x = (i % 9) * GRILLEHEIGHT + BORDERWIDTH;
+		pt.y = (i / 9) * GRILLEWIDTH + BORDERHEIGHT;
 		
 		z = IntToSubscript(m_interface[i]);
 		
-		m_Chessman.Draw(&MemDC, z , pt, ILD_TRANSPARENT);
+		m_Chessman.Draw(&MemDC, z, pt, ILD_TRANSPARENT);
 		if(i == m_SelectMoveFrom)
 		{
 			m_Chessman.Draw(&MemDC, 14, pt, ILD_TRANSPARENT);
@@ -368,7 +306,7 @@ CRect CChineseChessDlg::GetPieceRect(short pos)
 
 void CChineseChessDlg::OnLetComputerThink()
 {
-	if (m_gameState==GAMEOVER)
+	if (m_gameState == GAMEOVER)
 	{
 		return;
 	}
@@ -415,8 +353,8 @@ void CChineseChessDlg::OnLetComputerThink()
 	RequireDrawCell(zz); 
 	RequireDrawCell(kk);
 
-	zz = ((z/16 -3) * 9 + z % 16 -3);	//将16*16的棋盘位置转换成10*9的棋盘位置
-	kk = ((k/16 -3) * 9 + k % 16 -3);
+	zz = ((z / 16 -3) * 9 + z % 16 -3);	//将16*16的棋盘位置转换成10*9的棋盘位置
+	kk = ((k / 16 -3) * 9 + k % 16 -3);
 
 	m_interface[kk] = m_interface[zz];
 	m_interface[zz] = 0;
@@ -549,14 +487,5 @@ int CChineseChessDlg::IntToSubscript(int a)
 		case 47:	return 13;
 
 		default:	return 14;
-	}
-}
-
-void CChineseChessDlg::OnButtonClose() 
-{
-	if(MessageBox("真的要退出吗？", "系统提示", MB_OKCANCEL)==IDOK)
-	{
-		DestroyWindow();
-		delete this;
 	}
 }

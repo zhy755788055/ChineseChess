@@ -1,5 +1,5 @@
-#if !defined(AFX_DUANDLG_H__BC9E6178_3857_4B19_A937_D0B32A100772__INCLUDED_)
-#define AFX_DUANDLG_H__BC9E6178_3857_4B19_A937_D0B32A100772__INCLUDED_
+#if !defined(AFX_ChessDLG_H__BC9E6178_3857_4B19_A937_D0B32A100772__INCLUDED_)
+#define AFX_ChessDLG_H__BC9E6178_3857_4B19_A937_D0B32A100772__INCLUDED_
 
 #if _MSC_VER > 1000
 #pragma once
@@ -23,7 +23,7 @@
 #define IDM_LET_COMPUTERTHINK WM_USER + 100
 
 /////////////////////////////////////////////////////////////////////////////
-// CDuanDlg dialog
+// CChineseChessDlg dialog
 
 class CChineseChessDlg : public CDialog
 {
@@ -38,8 +38,8 @@ public:
 	short GetPiecePos(POINT pt);		//鼠标点对应的棋盘位置
 	BOOL IsPtInBoard(CPoint point);		//鼠标点是否在棋盘内
 
-	//{{AFX_DATA(CDuanDlg)
-	enum { IDD = IDD_DUAN_DIALOG };
+	//{{AFX_DATA(CChineseChessDlg)
+	enum { IDD = IDD_CHINESECHESS_DIALOG };
 	CStatic	m_RedTimePass_Ctr;
 	CStatic	m_RedTimeLeft_Ctr;
 	CStatic	m_BlkTimePass_Ctr;
@@ -49,14 +49,14 @@ public:
 	//}}AFX_DATA
 
 	// ClassWizard generated virtual function overrides
-	//{{AFX_VIRTUAL(CDuanDlg)
+	//{{AFX_VIRTUAL(CChineseChessDlg)
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
 	//}}AFX_VIRTUAL
 
 protected:
 	HICON m_hIcon;
-	//{{AFX_MSG(CDuanDlg)
+	//{{AFX_MSG(CChineseChessDlg)
 	virtual BOOL OnInitDialog();
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg void OnPaint();
@@ -65,7 +65,6 @@ protected:
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnLetComputerThink();
 	afx_msg void OnTimer(UINT nIDEvent);
-	afx_msg void OnButtonClose();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 

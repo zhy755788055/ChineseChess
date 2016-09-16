@@ -5,3 +5,5 @@ Debug
 *.plg
 *.aps
 ReadMe.txt
+*.db
+*.user

@@ -20,58 +20,6 @@ CBoard::~CBoard()
 
 }
 
-//棋子整数值转换成字符表示
-char CBoard::IntToChar(int a)
-{
-	if(a <32)
-	{
-		switch(a)
-		{
-		case 16:	return 'K';
-		case 17:
-		case 18:	return 'A';
-		case 19:
-		case 20:	return 'B';
-		case 21:
-		case 22:	return 'N';
-		case 23:
-		case 24:	return 'R';
-		case 25:
-		case 26:	return 'C';
-		case 27:
-		case 28:
-		case 29:
-		case 30:
-		case 31:	return 'P';
-		default:	return 0;
-		}
-	}
-	else
-	{
-		a = a-16;
-		switch(a)
-		{
-		case 16:	return 'k';
-		case 17:
-		case 18:	return 'a';
-		case 19:
-		case 20:	return 'b';
-		case 21:
-		case 22:	return 'n';
-		case 23:
-		case 24:	return 'r';
-		case 25:
-		case 26:	return 'c';
-		case 27:
-		case 28:
-		case 29:
-		case 30:
-		case 31:	return 'p';
-		default:	return 0;
-		}
-	}
-}
-
 void CBoard::ClearBoard() //清空棋盘数组
 {
 	int i;

@@ -236,6 +236,26 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\chess.rc"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCResourceCompilerTool"
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCResourceCompilerTool"
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath=".\ChineseChess.cpp"
 				>
 				<FileConfiguration
@@ -271,26 +291,6 @@
 					>
 					<Tool
 						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="duan.rc"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCResourceCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCResourceCompilerTool"
 						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
@@ -412,19 +412,19 @@
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 			>
 			<File
+				RelativePath=".\res\chess.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\res\chess.rc2"
+				>
+			</File>
+			<File
 				RelativePath="res\chessboard.bmp"
 				>
 			</File>
 			<File
 				RelativePath="res\chessman.bmp"
-				>
-			</File>
-			<File
-				RelativePath="res\duan.ico"
-				>
-			</File>
-			<File
-				RelativePath="res\duan.rc2"
 				>
 			</File>
 		</Filter>

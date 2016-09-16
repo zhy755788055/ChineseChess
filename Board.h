@@ -18,7 +18,6 @@ public:
 	int side;					// 轮到哪方走，0表示红方，1表示黑方
 	unsigned char board[256];	// 棋盘数组
 	unsigned char piece[48];	// 棋子数组
-	char FenString[128];		// 局面的FEN串格式
 
 	move MoveStack[128];		// 执行的走法栈
 	int StackTop;				// 栈顶指针,指向栈顶元素的下一位置,=0表示栈空
@@ -28,7 +27,6 @@ public:
 
 	// 局面表示相关函数
 	void ClearBoard();						// 清空棋盘数组
-	char IntToChar(int a);					// 棋子整数值转换成字符值
 	int CharToSubscript(char ch);			// FEN串中棋子对应的数组下标,下标0，1，2，3，4，5，6分别对应表示将，仕，象，马，车，炮，兵
 
 	void AddPiece(int pos, int pc);			// 在pos位置增加棋子pc
@@ -43,7 +41,6 @@ public:
 
 	// 评估函数
 	short Eval();						// 评估函数
-	int IntToSubscript(int a);			// 棋子整数值转换成下标,下标0，1，2，3，4，5，6分别对应表示将，仕，象，马，车，炮，兵
 
 	// 搜索函数
 	void ComputerThink();	//电脑思考
