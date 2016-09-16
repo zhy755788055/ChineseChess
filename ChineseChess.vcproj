@@ -55,7 +55,7 @@
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="stdafx.h"
-				PrecompiledHeaderFile=".\Debug/duan.pch"
+				PrecompiledHeaderFile=".\Debug/ChineseChess.pch"
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
 				ProgramDataBaseFileName=".\Debug/"
@@ -77,11 +77,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile=".\Debug/duan.exe"
+				OutputFile=".\Debug/ChineseChess.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\Debug/duan.pdb"
+				ProgramDatabaseFile=".\Debug/ChineseChess.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -97,7 +97,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\Debug/duan.bsc"
+				OutputFile=".\Debug/ChineseChess.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
