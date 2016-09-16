@@ -2,8 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="duan"
+	Name="ChineseChess"
 	ProjectGUID="{D19BAB08-F0C7-4594-BA82-BF15EFF5336E}"
+	RootNamespace="ChineseChess"
 	Keyword="MFCProj"
 	>
 	<Platforms>
@@ -431,10 +432,6 @@
 				>
 			</File>
 		</Filter>
-		<File
-			RelativePath="ReadMe.txt"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>
