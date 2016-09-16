@@ -1,25 +1,25 @@
-
 #include "stdafx.h"
 #include "Board.h"
 
 //各种棋子走法数组
-static short KingDir[8] ={-0x10,		-0x01,	+0x01,	+0x10,	0,		0,		0,		0};//将
-static short AdvisorDir[8]={-0x11,		-0x0f,	+0x0f,	+0x11,	0,		0,		0,		0};		//士
-static short BishopDir[8] ={-0x22,		-0x1e,	+0x1e,	+0x22,	0,		0,		0,		0};	//象
-static short KnightDir[8] ={-0x21,		-0x1f,	-0x12,	-0x0e,	+0x0e,	+0x12,	+0x1f,	+0x21};//马
-static short RookDir[8]   ={-0x01,		+0x01,	-0x10,	+0x10,	0,		0,		0,		0};		//车
-static short CannonDir[8] ={-0x01,		+0x01,	-0x10,	+0x10,	0,		0,		0,		0};		//炮
-static short PawnDir[2][8]={
-			{-0x01,		+0x01,	-0x10,	0,		0,		0,		0,		0},
-			{-0x01,		+0x01,	+0x10,	0,		0,		0,		0,		0}
-		};		//兵
+static short KingDir[8]		={-0x10,		-0x01,	+0x01,	+0x10,	0,		0,		0,		0};		//将
+static short AdvisorDir[8]	={-0x11,		-0x0f,	+0x0f,	+0x11,	0,		0,		0,		0};		//士
+static short BishopDir[8]	={-0x22,		-0x1e,	+0x1e,	+0x22,	0,		0,		0,		0};		//象
+static short KnightDir[8]	={-0x21,		-0x1f,	-0x12,	-0x0e,	+0x0e,	+0x12,	+0x1f,	+0x21};	//马
+static short RookDir[8]		={-0x01,		+0x01,	-0x10,	+0x10,	0,		0,		0,		0};		//车
+static short CannonDir[8]	={-0x01,		+0x01,	-0x10,	+0x10,	0,		0,		0,		0};		//炮
+static short PawnDir[2][8]	={																		//兵
+								{-0x01,		+0x01,	-0x10,	0,		0,		0,		0,		0},
+								{-0x01,		+0x01,	+0x10,	0,		0,		0,		0,		0}
+							 };		
 
-static short KnightCheck[8] = {-0x10,-0x10,-0x01,+0x01,-0x01,+0x01,+0x10,+0x10};//马腿位置
-static short BishopCheck[8] = {-0x11,-0x0f,+0x0f,+0x11,0,0,0,0};	//象眼位置
-static short kingpalace[9] = {54,55,56,70,71,72,86,87,88};	//黑方九宫位置
+static short KnightCheck[8] = {-0x10, -0x10, -0x01, +0x01, -0x01, +0x01, +0x10, +0x10};	//马腿位置
+static short BishopCheck[8] = {-0x11, -0x0f, +0x0f, +0x11, 0, 0, 0, 0};					//象眼位置
+static short kingpalace[9]	= {54,55,56,70,71,72,86,87,88};								//黑方九宫位置
 
 //各种棋子合理位置数组
-static unsigned char LegalPosition[2][256] ={
+static unsigned char LegalPosition[2][256] =
+{
 	{
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -57,9 +57,11 @@ static unsigned char LegalPosition[2][256] ={
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 	}
 };
+
 static unsigned char PositionMask[7] = {2, 4, 16, 1, 1, 1, 8};
 
-int CBoard::Check(int lSide)	//检测lSide一方是否被将军，是被将军返回1，否则返回0
+//检测lSide一方是否被将军，是被将军返回1，否则返回0
+int CBoard::Check(int lSide)
 {
 	unsigned char wKing,bKing; //红黑双方将帅的位置
 	unsigned char p,q;
@@ -426,33 +428,26 @@ int CBoard::GenAllMove(move * MoveArray)
 	return mvArray - MoveArray;
 }
 
-void CBoard::OutputMove(move * MoveArray, int MoveNum)
-{
-	int i;
-	for(i=0; i<MoveNum; i++)
-	{
-		printf("from %3d to %3d\n",MoveArray[i].from,MoveArray[i].to);
-	}
-	printf("total move number:%d\n",MoveNum);
-}
-
 int CBoard::LegalMove(move mv)	//判断走法是否合理
 {
 	move mvArray[128];
-	int num,i;
-	num = GenAllMove(mvArray);
-	for(i=0; i<num; i++)
+	int num = GenAllMove(mvArray);
+
+	int i;
+	for(i = 0; i < num; i++)
 	{
-		if(mv.from == mvArray[i].from && mv.to == mvArray[i].to)
+		if((mv.from == mvArray[i].from) && (mv.to == mvArray[i].to))
+		{
 			return 1;
+		}
 	}
 	return 0;
 }
 
-int CBoard::HasLegalMove()		//判断当前局面是否有合理走法，没有则判输
+//判断当前局面是否有合理走法，没有则判输
+int CBoard::HasLegalMove()
 {
 	move mvArray[128];
-	int num;
-	num = GenAllMove(mvArray);
+	int num = GenAllMove(mvArray);;
 	return num;
 }

@@ -2,8 +2,8 @@
 //
 
 #include "stdafx.h"
-#include "duan.h"
-#include "duanDlg.h"
+#include "ChineseChess.h"
+#include "ChineseChessDlg.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -14,7 +14,7 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // CDuanApp
 
-BEGIN_MESSAGE_MAP(CDuanApp, CWinApp)
+BEGIN_MESSAGE_MAP(CChineseChessApp, CWinApp)
 	//{{AFX_MSG_MAP(CDuanApp)
 		// NOTE - the ClassWizard will add and remove mapping macros here.
 		//    DO NOT EDIT what you see in these blocks of generated code!
@@ -22,24 +22,14 @@ BEGIN_MESSAGE_MAP(CDuanApp, CWinApp)
 	ON_COMMAND(ID_HELP, CWinApp::OnHelp)
 END_MESSAGE_MAP()
 
-/////////////////////////////////////////////////////////////////////////////
-// CDuanApp construction
-
-CDuanApp::CDuanApp()
+CChineseChessApp::CChineseChessApp()
 {
-	// TODO: add construction code here,
-	// Place all significant initialization in InitInstance
+
 }
 
-/////////////////////////////////////////////////////////////////////////////
-// The one and only CDuanApp object
+CChineseChessApp theApp;
 
-CDuanApp theApp;
-
-/////////////////////////////////////////////////////////////////////////////
-// CDuanApp initialization
-
-BOOL CDuanApp::InitInstance()
+BOOL CChineseChessApp::InitInstance()
 {
 	AfxEnableControlContainer();
 
@@ -54,7 +44,7 @@ BOOL CDuanApp::InitInstance()
 	Enable3dControlsStatic();	// Call this when linking to MFC statically
 #endif
 
-	CDuanDlg dlg;
+	CChineseChessDlg dlg;
 	m_pMainWnd = &dlg;
 	int nResponse = dlg.DoModal();
 	if (nResponse == IDOK)

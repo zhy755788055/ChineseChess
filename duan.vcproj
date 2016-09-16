@@ -236,7 +236,27 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="duan.cpp"
+				RelativePath=".\ChineseChess.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\ChineseChessDlg.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -271,26 +291,6 @@
 					>
 					<Tool
 						Name="VCResourceCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="duanDlg.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
 						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
@@ -387,15 +387,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ChineseChess.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ChineseChessDlg.h"
+				>
+			</File>
+			<File
 				RelativePath="def.h"
-				>
-			</File>
-			<File
-				RelativePath="duan.h"
-				>
-			</File>
-			<File
-				RelativePath="duanDlg.h"
 				>
 			</File>
 			<File
@@ -411,10 +411,6 @@
 			Name="Resource Files"
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 			>
-			<File
-				RelativePath="res\board.bmp"
-				>
-			</File>
 			<File
 				RelativePath="res\chessboard.bmp"
 				>

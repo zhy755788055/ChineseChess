@@ -1,9 +1,8 @@
 // duanDlg.cpp : implementation file
 //
-
 #include "stdafx.h"
-#include "duan.h"
-#include "duanDlg.h"
+#include "ChineseChess.h"
+#include "ChineseChessDlg.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -13,14 +12,13 @@ static char THIS_FILE[] = __FILE__;
 
 /////////////////////////////////////////////////////////////////////////////
 // CAboutDlg dialog used for App About
-#define BORDERWIDTH 13 //棋盘(左右)边缘的宽度
-#define BORDERHEIGHT 15//棋盘(上下)边缘的高度
-#define GRILLEWIDTH 35  //棋盘上每个格子的高度
+#define BORDERWIDTH	 13	//棋盘(左右)边缘的宽度
+#define BORDERHEIGHT 15	//棋盘(上下)边缘的高度
+#define GRILLEWIDTH  35 //棋盘上每个格子的高度
 #define GRILLEHEIGHT 35 //棋盘上每个格子的宽度
 
 #define RedTime 1
 #define BlkTime 2
-/////////////////////////////////////////////////////////////////////////////////
 
 class CAboutDlg : public CDialog
 {
@@ -67,8 +65,8 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CDuanDlg dialog
 
-CDuanDlg::CDuanDlg(CWnd* pParent /*=NULL*/)
-	: CDialog(CDuanDlg::IDD, pParent)
+CChineseChessDlg::CChineseChessDlg(CWnd* pParent /*=NULL*/)
+: CDialog(CChineseChessDlg::IDD, pParent)
 {
 	//{{AFX_DATA_INIT(CDuanDlg)
 		// NOTE: the ClassWizard will add member initialization here
@@ -79,7 +77,7 @@ CDuanDlg::CDuanDlg(CWnd* pParent /*=NULL*/)
 	m_SelectMoveTo = NOMOVE;
 }
 
-void CDuanDlg::DoDataExchange(CDataExchange* pDX)
+void CChineseChessDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CDuanDlg)
@@ -92,7 +90,7 @@ void CDuanDlg::DoDataExchange(CDataExchange* pDX)
 	//}}AFX_DATA_MAP
 }
 
-BEGIN_MESSAGE_MAP(CDuanDlg, CDialog)
+BEGIN_MESSAGE_MAP(CChineseChessDlg, CDialog)
 	//{{AFX_MSG_MAP(CDuanDlg)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
@@ -108,7 +106,7 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CDuanDlg message handlers
 
-BOOL CDuanDlg::OnInitDialog()
+BOOL CChineseChessDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
@@ -155,16 +153,15 @@ BOOL CDuanDlg::OnInitDialog()
 	m_RedTimeLeft_Ctr.SetWindowText("");
 	m_RedTimePass_Ctr.SetWindowText("");
 
-
 	InitData();
 	m_TotalTime = CTimeSpan(0,0,30,0);
 	m_BlkTimer = 0;
 	m_RedTimer = 0;
 
-	return TRUE;  // return TRUE  unless you set the focus to a control
+	return TRUE;
 }
 
-void CDuanDlg::OnSysCommand(UINT nID, LPARAM lParam)
+void CChineseChessDlg::OnSysCommand(UINT nID, LPARAM lParam)
 {
 	if ((nID & 0xFFF0) == IDM_ABOUTBOX)
 	{
@@ -177,35 +174,8 @@ void CDuanDlg::OnSysCommand(UINT nID, LPARAM lParam)
 	}
 }
 
-// If you add a minimize button to your dialog, you will need the code below
-//  to draw the icon.  For MFC applications using the document/view model,
-//  this is automatically done for you by the framework.
-
-void CDuanDlg::OnPaint() 
+void CChineseChessDlg::OnPaint() 
 {
-/*	if (IsIconic())
-	{
-		CPaintDC dc(this); // device context for painting
-
-		SendMessage(WM_ICONERASEBKGND, (WPARAM) dc.GetSafeHdc(), 0);
-
-		// Center icon in client rectangle
-		int cxIcon = GetSystemMetrics(SM_CXICON);
-		int cyIcon = GetSystemMetrics(SM_CYICON);
-		CRect rect;
-		GetClientRect(&rect);
-		int x = (rect.Width() - cxIcon + 1) / 2;
-		int y = (rect.Height() - cyIcon + 1) / 2;
-
-		// Draw the icon
-		dc.DrawIcon(x, y, m_hIcon);
-	}
-	else
-	{
-		CDialog::OnPaint();
-	}
-*/
-
 	CPaintDC dc(this);
 	CDC MemDC;
 	POINT pt;
@@ -232,11 +202,15 @@ void CDuanDlg::OnPaint()
 		
 		z = IntToSubscript(m_interface[i]);
 		
-		m_Chessman.Draw(&MemDC,z , pt, ILD_TRANSPARENT);
+		m_Chessman.Draw(&MemDC, z , pt, ILD_TRANSPARENT);
 		if(i == m_SelectMoveFrom)
+		{
 			m_Chessman.Draw(&MemDC, 14, pt, ILD_TRANSPARENT);
+		}
 		if(i == m_SelectMoveTo)
+		{
 			m_Chessman.Draw(&MemDC, 14, pt, ILD_TRANSPARENT);
+		}
 	}
 
 	dc.BitBlt(0, 0, m_nBoardWidth, m_nBoardHeight, &MemDC, 0, 0, SRCCOPY);
@@ -247,14 +221,13 @@ void CDuanDlg::OnPaint()
 
 // The system calls this to obtain the cursor to display while the user drags
 //  the minimized window.
-HCURSOR CDuanDlg::OnQueryDragIcon()
+HCURSOR CChineseChessDlg::OnQueryDragIcon()
 {
 	return (HCURSOR) m_hIcon;
 }
 
-void CDuanDlg::OnButBegin() 
+void CChineseChessDlg::OnButBegin() 
 {
-	// TODO: Add your control notification handler code here
 	InitData();
 	m_SelectMoveFrom = NOMOVE;
 	m_SelectMoveTo = NOMOVE;
@@ -276,17 +249,17 @@ void CDuanDlg::OnButBegin()
 	m_gameState = REDTHINKING;
 }
 
-BOOL CDuanDlg::IsPtInBoard(CPoint point)
+BOOL CChineseChessDlg::IsPtInBoard(CPoint point)
 {
-
 	return rectBoard.PtInRect(point);
 }
 
-void CDuanDlg::OnLButtonDown(UINT nFlags, CPoint point) 
+void CChineseChessDlg::OnLButtonDown(UINT nFlags, CPoint point) 
 {
-	// TODO: Add your message handler code here and/or call default
 	if (!IsPtInBoard(point) || m_gameState!=REDTHINKING)
+	{
 		return;
+	}
 
 	int SideTag = 16 + m_HumanSide * 16;
 
@@ -299,9 +272,13 @@ void CDuanDlg::OnLButtonDown(UINT nFlags, CPoint point)
 	m_SelectMoveTo = NOMOVE;
 	m_SelectMoveFrom = NOMOVE;
 	if(from != NOMOVE)
+	{
 		RequireDrawCell(from);
+	}
 	if(dest != NOMOVE)
+	{
 		RequireDrawCell(dest);
+	}
 
 	dest = GetPiecePos(point);
 
@@ -309,80 +286,92 @@ void CDuanDlg::OnLButtonDown(UINT nFlags, CPoint point)
 
 	if (piece & SideTag) //选手选中本方棋子
 	{
-		if (from != NOMOVE) {	//开始已经选中有本方其他棋子,则取消高亮显示原来选中的棋子
+		if (from != NOMOVE)
+		{
+			//开始已经选中有本方其他棋子,则取消高亮显示原来选中的棋子
 			m_SelectMoveFrom = NOMOVE;
 			RequireDrawCell(from);
 		}
 		m_SelectMoveFrom = dest;	//高亮显示新选中的棋子
 		RequireDrawCell(dest);
 	}
-	else //棋子落在空处或者他方的棋子上
-	if (from != NOMOVE)	//如果已经先选中本方棋子
+	else
 	{
-		move mv;
-		mv.from = ((from/9 +3) *16 + from%9 +3);	//将10*9的棋盘位置转换成16*16的棋盘位置
-		mv.to = ((dest/9 +3) *16 + dest%9 +3);
-
-		if (m_Board.LegalMove(mv)) //走法合理性检验，源位置z，目的位置k
+		//棋子落在空处或者他方的棋子上
+		if (from != NOMOVE)	//如果已经先选中本方棋子
 		{
-			m_Board.MakeMove(mv);
-			m_interface[dest] = m_interface[from];
-			m_interface[from] = 0;
+			move mv;
+			//将10*9的棋盘位置转换成16*16的棋盘位置
+			mv.from = ((from/9 +3) * 16 + from % 9 + 3);
+			mv.to = ((dest/9 +3) * 16 + dest % 9 + 3);
 
-			m_SelectMoveTo = dest;
-			RequireDrawCell(dest);
-			m_SelectMoveFrom = from;	//着重显示走法起始点
-			RequireDrawCell(from);		//将源点及目的点重新显示
-			Beep(200,300);
+			//走法合理性检验，源位置z，目的位置k
+			if (m_Board.LegalMove(mv)) 
+			{
+				m_Board.MakeMove(mv);
+				m_interface[dest] = m_interface[from];
+				m_interface[from] = 0;
 
-			num = m_Board.HasLegalMove(); //判断胜负
-			if (!num) {
+				m_SelectMoveTo = dest;
+				RequireDrawCell(dest);
+				m_SelectMoveFrom = from;	//着重显示走法起始点
+				RequireDrawCell(from);		//将源点及目的点重新显示
+				Beep(200,300);
+
+				//判断胜负
+				num = m_Board.HasLegalMove();
+				if (!num)
+				{
+					KillTimer(m_RedTimer);
+					m_gameState = GAMEOVER;
+					MessageBox("红方获胜", "系统消息");
+					return;
+				}
+
 				KillTimer(m_RedTimer);
-				m_gameState = GAMEOVER;
-				MessageBox("红方获胜", "系统消息");
-				return;
+				m_gameState = BLACKTHINKING;
+
+				PostMessage(WM_COMMAND, IDM_LET_COMPUTERTHINK);
 			}
-
-			KillTimer(m_RedTimer);
-			m_gameState = BLACKTHINKING;
-
-			PostMessage(WM_COMMAND, IDM_LET_COMPUTERTHINK);
 		}
 	}
-	
 	CDialog::OnLButtonDown(nFlags, point);
 }
 
-short CDuanDlg::GetPiecePos(POINT pt)
+short CChineseChessDlg::GetPiecePos(POINT pt)
 {
-	if (!rectBoard.PtInRect(pt)) return -1;
+	if (!rectBoard.PtInRect(pt))
+	{
+		return -1;
+	}
+
 	short x = (pt.x-rectBoard.left) / GRILLEWIDTH;
 	short y = (pt.y-rectBoard.top)  / GRILLEHEIGHT;
 
 	return x + y * 9;
-
 }
 
-void CDuanDlg::RequireDrawCell(short pos)
+void CChineseChessDlg::RequireDrawCell(short pos)
 {
 	CRect rect = GetPieceRect(pos);
 	InvalidateRect(&rect, false);
 	UpdateWindow();
 }
 
-CRect CDuanDlg::GetPieceRect(short pos)
+CRect CChineseChessDlg::GetPieceRect(short pos)
 {
 	short x = BORDERWIDTH + (pos % 9)*GRILLEWIDTH;
 	short y = BORDERHEIGHT + (pos / 9)*GRILLEHEIGHT;
 	CRect rect(x, y, x+GRILLEWIDTH, y+GRILLEHEIGHT);
-	return rect;	
-
+	return rect;
 }
 
-void CDuanDlg::OnLetComputerThink()
+void CChineseChessDlg::OnLetComputerThink()
 {
 	if (m_gameState==GAMEOVER)
+	{
 		return;
+	}
 	CTime t1 = CTime::GetCurrentTime();
 
 	m_Board.ComputerThink();
@@ -392,7 +381,9 @@ void CDuanDlg::OnLetComputerThink()
 	{
 		m_gameState = GAMEOVER;
 		if(m_RedTimer)
+		{
 			KillTimer(m_RedTimer);
+		}
 		MessageBox("黑方超时判负", "系统提示");
 		return;
 	}
@@ -405,7 +396,9 @@ void CDuanDlg::OnLetComputerThink()
 	{
 		m_gameState = GAMEOVER;
 		if(m_RedTimer)
+		{
 			KillTimer(m_RedTimer);
+		}
 		MessageBox("黑方认输，红方获胜", "系统提示");
 		return;
 	}
@@ -422,8 +415,8 @@ void CDuanDlg::OnLetComputerThink()
 	RequireDrawCell(zz); 
 	RequireDrawCell(kk);
 
-	zz = ((z/16 -3) *9 + z%16 -3);	//将16*16的棋盘位置转换成10*9的棋盘位置
-	kk = ((k/16 -3) *9 + k%16 -3);
+	zz = ((z/16 -3) * 9 + z % 16 -3);	//将16*16的棋盘位置转换成10*9的棋盘位置
+	kk = ((k/16 -3) * 9 + k % 16 -3);
 
 	m_interface[kk] = m_interface[zz];
 	m_interface[zz] = 0;
@@ -439,8 +432,9 @@ void CDuanDlg::OnLetComputerThink()
 	m_BlkTimeLeft_Ctr.SetWindowText(m_tsBlkTimeLeft.Format("%H:%M:%S"));
 	m_BlkTimePass_Ctr.SetWindowText(m_tsBlkTimePass.Format("%H:%M:%S"));
 
-	num = m_Board.HasLegalMove(); //
-	if (!num) {
+	num = m_Board.HasLegalMove();
+	if (!num)
+	{
 		KillTimer(m_RedTimer);
 		m_gameState = GAMEOVER;
 		Beep(700,1000);
@@ -452,42 +446,41 @@ void CDuanDlg::OnLetComputerThink()
 	m_RedTimer = SetTimer(1,1000,NULL);
 }
 
-void CDuanDlg::OnTimer(UINT nIDEvent) 
+void CChineseChessDlg::OnTimer(UINT nIDEvent) 
 {
-	// TODO: Add your message handler code here and/or call default
 	switch(nIDEvent)
 	{
-	case 2:
-		m_tsBlkTimePass =  m_tsBlkTimePass + CTimeSpan(0,0,0,1);
-		m_tsBlkTimeLeft = m_TotalTime - m_tsBlkTimePass;
-		m_BlkTimeLeft_Ctr.SetWindowText(m_tsBlkTimeLeft.Format("%H:%M:%S"));
-		m_BlkTimePass_Ctr.SetWindowText(m_tsBlkTimePass.Format("%H:%M:%S"));
-		break;
-	case 1:
-		m_tsRedTimePass =  m_tsRedTimePass + CTimeSpan(0,0,0,1);
-		if(m_tsRedTimePass > m_TotalTime)
-		{
-			m_gameState = GAMEOVER;
-			KillTimer(m_RedTimer);
-			MessageBox("红方超时判负", "系统提示");
-		}
-		else
-		{
-			m_tsRedTimeLeft = m_TotalTime - m_tsRedTimePass;
-			m_RedTimeLeft_Ctr.SetWindowText(m_tsRedTimeLeft.Format("%H:%M:%S"));
-			m_RedTimePass_Ctr.SetWindowText(m_tsRedTimePass.Format("%H:%M:%S"));
-		}
-		break;
-	default:
-		break;
+		case 2:
+			m_tsBlkTimePass =  m_tsBlkTimePass + CTimeSpan(0,0,0,1);
+			m_tsBlkTimeLeft = m_TotalTime - m_tsBlkTimePass;
+			m_BlkTimeLeft_Ctr.SetWindowText(m_tsBlkTimeLeft.Format("%H:%M:%S"));
+			m_BlkTimePass_Ctr.SetWindowText(m_tsBlkTimePass.Format("%H:%M:%S"));
+			break;
+		case 1:
+			m_tsRedTimePass =  m_tsRedTimePass + CTimeSpan(0,0,0,1);
+			if(m_tsRedTimePass > m_TotalTime)
+			{
+				m_gameState = GAMEOVER;
+				KillTimer(m_RedTimer);
+				MessageBox("红方超时判负", "系统提示");
+			}
+			else
+			{
+				m_tsRedTimeLeft = m_TotalTime - m_tsRedTimePass;
+				m_RedTimeLeft_Ctr.SetWindowText(m_tsRedTimeLeft.Format("%H:%M:%S"));
+				m_RedTimePass_Ctr.SetWindowText(m_tsRedTimePass.Format("%H:%M:%S"));
+			}
+			break;
+		default:
+			break;
 	}
 	CDialog::OnTimer(nIDEvent);
 }
 
-void CDuanDlg::InitData()
+void CChineseChessDlg::InitData()
 {
-
-	static BYTE board[BOARD_SIZE]= {
+	static BYTE board[BOARD_SIZE] = 
+	{
 		39, 37, 35, 33, 32, 34, 36, 38, 40,
 		0, 0, 0, 0, 0, 0, 0, 0, 0,
 		0, 41, 0, 0, 0, 0, 0, 42, 0,
@@ -500,7 +493,7 @@ void CDuanDlg::InitData()
 		23, 21, 19, 17, 16, 18, 20, 22, 24
 	};
 
-	for (int i=0; i<BOARD_SIZE; i++) 
+	for (int i = 0; i < BOARD_SIZE; i++) 
 	{
 		m_interface[i] = board[i];
 	}
@@ -510,57 +503,58 @@ void CDuanDlg::InitData()
 	m_gameState = GAMEOVER;
 }
 
-int CDuanDlg::IntToSubscript(int a)
+int CChineseChessDlg::IntToSubscript(int a)
 {
 	if(a<16 && a>=48)
+	{
 		return 14;
-	
+	}
+
 	switch(a)
 	{
 		//红方棋子
-	case 16:	return 0;
-	case 17:
-	case 18:	return 1;
-	case 19:
-	case 20:	return 2;
-	case 21:
-	case 22:	return 3;
-	case 23:
-	case 24:	return 4;
-	case 25:
-	case 26:	return 5;
-	case 27:
-	case 28:
-	case 29:
-	case 30:
-	case 31:	return 6;
+		case 16:	return 0;
+		case 17:
+		case 18:	return 1;
+		case 19:
+		case 20:	return 2;
+		case 21:
+		case 22:	return 3;
+		case 23:
+		case 24:	return 4;
+		case 25:
+		case 26:	return 5;
+		case 27:
+		case 28:
+		case 29:
+		case 30:
+		case 31:	return 6;
 
 		//黑方棋子
-	case 32:	return 7;
-	case 33:
-	case 34:	return 8;
-	case 35:
-	case 36:	return 9;
-	case 37:
-	case 38:	return 10;
-	case 39:
-	case 40:	return 11;
-	case 41:
-	case 42:	return 12;
-	case 43:
-	case 44:
-	case 45:
-	case 46:
-	case 47:	return 13;
+		case 32:	return 7;
+		case 33:
+		case 34:	return 8;
+		case 35:
+		case 36:	return 9;
+		case 37:
+		case 38:	return 10;
+		case 39:
+		case 40:	return 11;
+		case 41:
+		case 42:	return 12;
+		case 43:
+		case 44:
+		case 45:
+		case 46:
+		case 47:	return 13;
 
-	default:	return 14;
+		default:	return 14;
 	}
 }
 
-void CDuanDlg::OnButtonClose() 
+void CChineseChessDlg::OnButtonClose() 
 {
-	// TODO: Add your control notification handler code here
-	if(MessageBox("真的要退出吗？","系统提示",MB_OKCANCEL)==IDOK)
+	if(MessageBox("真的要退出吗？", "系统提示", MB_OKCANCEL)==IDOK)
 	{
 		DestroyWindow();
 		delete this;

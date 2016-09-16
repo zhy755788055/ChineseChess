@@ -1,17 +1,18 @@
-
 #include "stdafx.h"
 #include "Board.h"
 
-
 void CBoard::ChangeSide()
 {
-	side = 1- side;
+	side = 1 - side;
 }
 
-bool  CBoard::MakeMove(move m)
+bool CBoard::MakeMove(move m)
 {
-	unsigned char from, dest, p;
-	int SideTag = (side==0 ? 32:16);	//´Ë´¦Îª¶Ô·½½«Ë§µÄÖµ£¬ÆäËüµØ·½¶à±íÊ¾±¾·½½«Ë§Öµ
+	unsigned char from;
+	unsigned char dest;
+	unsigned char p;
+
+	int SideTag = (side == 0 ? 32:16);	//´Ë´¦Îª¶Ô·½½«Ë§µÄÖµ£¬ÆäËüµØ·½¶à±íÊ¾±¾·½½«Ë§Öµ
 
 	from = m.from; 
 	dest = m.to;
@@ -24,7 +25,9 @@ bool  CBoard::MakeMove(move m)
 
 	//ÉèÖÃÆå×ÓÊı×é
 	if(p>0)
+	{
 		piece[p] = 0;
+	}
 	piece[board[from]] = dest;
 
 	//ÉèÖÃÆåÅÌÊı×é
@@ -57,12 +60,14 @@ void CBoard::UnMakeMove(void)
 
 	//ÉèÖÃÆå×ÓÊı×é
 	if(p>0)
+	{
 		piece[p] = dest;
+	}
 	piece[board[from]] = from;
-	
 }
 
-int CBoard::AlphaBetaSearch(int depth, int alpha, int beta)	// Alpha-BetaËÑË÷Ëã·¨
+// Alpha-BetaËÑË÷Ëã·¨
+int CBoard::AlphaBetaSearch(int depth, int alpha, int beta)
 {
 	int value;
 	move MoveArray[128];
@@ -70,7 +75,9 @@ int CBoard::AlphaBetaSearch(int depth, int alpha, int beta)	// Alpha-BetaËÑË÷Ëã·
 	int i;
 
 	if(depth ==0)
+	{
 		return Eval();
+	}
 
 	int num = GenAllMove(MoveArray);
 	for(i = 0 ; i<num; i++)
@@ -85,7 +92,9 @@ int CBoard::AlphaBetaSearch(int depth, int alpha, int beta)	// Alpha-BetaËÑË÷Ëã·
 		{
 			alpha = value;
 			if(depth == MaxDepth)
+			{
 				BestMove = mv;
+			}
 		}
 	}
 	return alpha;

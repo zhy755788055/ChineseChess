@@ -19,10 +19,10 @@
 // See duan.cpp for the implementation of this class
 //
 
-class CDuanApp : public CWinApp
+class CChineseChessApp : public CWinApp
 {
 public:
-	CDuanApp();
+	CChineseChessApp();
 
 // Overrides
 	// ClassWizard generated virtual function overrides
