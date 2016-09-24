@@ -6,11 +6,6 @@
 #define IDR_MAINFRAME                   128
 #define IDB_CHESSBOARD                  129
 #define IDB_CHESSMAN                    130
-#define IDC_BUT_BEGIN                   1000
-#define IDC_RED_TIMEPASS                1002
-#define IDC_RED_TIMELEFT                1003
-#define IDC_BLK_TIMEPASS                1004
-#define IDC_BLK_TIMELEFT                1005
 
 // Next default values for new objects
 // 

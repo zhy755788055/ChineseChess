@@ -12,7 +12,7 @@ bool CBoard::MakeMove(move m)
 	unsigned char dest;
 	unsigned char p;
 
-	int SideTag = (side == 0 ? 32:16);	//此处为对方将帅的值，其它地方多表示本方将帅值
+	int SideTag = (side == 0 ? 32 : 16);	//此处为对方将帅的值，其它地方多表示本方将帅值
 
 	from = m.from; 
 	dest = m.to;
@@ -59,7 +59,7 @@ void CBoard::UnMakeMove(void)
 	board[dest] = p;
 
 	//设置棋子数组
-	if(p>0)
+	if(p > 0)
 	{
 		piece[p] = dest;
 	}
@@ -87,7 +87,9 @@ int CBoard::AlphaBetaSearch(int depth, int alpha, int beta)
 		value = -AlphaBetaSearch(depth -1, -beta, -alpha);
 		UnMakeMove();
 		if(value >= beta)
+		{
 			return beta;
+		}
 		if(value > alpha)
 		{
 			alpha = value;

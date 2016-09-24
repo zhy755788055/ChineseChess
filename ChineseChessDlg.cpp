@@ -13,9 +13,6 @@ static char THIS_FILE[] = __FILE__;
 #define GRILLEWIDTH  35 //棋盘上每个格子的高度
 #define GRILLEHEIGHT 35 //棋盘上每个格子的宽度
 
-#define RedTime 1
-#define BlkTime 2
-
 CChineseChessDlg::CChineseChessDlg(CWnd* pParent /*=NULL*/)
 : CDialog(CChineseChessDlg::IDD, pParent)
 {
@@ -28,21 +25,14 @@ void CChineseChessDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CChineseChessDlg)
-	DDX_Control(pDX, IDC_RED_TIMEPASS, m_RedTimePass_Ctr);
-	DDX_Control(pDX, IDC_RED_TIMELEFT, m_RedTimeLeft_Ctr);
-	DDX_Control(pDX, IDC_BLK_TIMEPASS, m_BlkTimePass_Ctr);
-	DDX_Control(pDX, IDC_BLK_TIMELEFT, m_BlkTimeLeft_Ctr);
-	DDX_Control(pDX, IDC_BUT_BEGIN, m_ButBegin);
 	//}}AFX_DATA_MAP
 }
 
 BEGIN_MESSAGE_MAP(CChineseChessDlg, CDialog)
 	//{{AFX_MSG_MAP(CChineseChessDlg)
 	ON_WM_PAINT()
-	ON_BN_CLICKED(IDC_BUT_BEGIN, OnButBegin)
 	ON_WM_LBUTTONDOWN()
 	ON_COMMAND(IDM_LET_COMPUTERTHINK, OnLetComputerThink)
-	ON_WM_TIMER()
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -58,7 +48,7 @@ BOOL CChineseChessDlg::OnInitDialog()
 	BITMAP BitMap;
 	m_BoardBmp.LoadBitmap(IDB_CHESSBOARD);
 	m_BoardBmp.GetBitmap(&BitMap);
-	m_nBoardWidth =  BitMap.bmWidth; 
+	m_nBoardWidth  = BitMap.bmWidth;
 	m_nBoardHeight = BitMap.bmHeight;
 	m_BoardBmp.DeleteObject();
 
@@ -69,15 +59,8 @@ BOOL CChineseChessDlg::OnInitDialog()
 	rectBoard.top = BORDERHEIGHT;
 	rectBoard.bottom = BORDERHEIGHT + GRILLEHEIGHT * 10;
 
-	m_BlkTimeLeft_Ctr.SetWindowText("");
-	m_BlkTimePass_Ctr.SetWindowText("");
-	m_RedTimeLeft_Ctr.SetWindowText("");
-	m_RedTimePass_Ctr.SetWindowText("");
-
 	InitData();
-	m_TotalTime = CTimeSpan(0, 0, 30, 0);
-	m_BlkTimer = 0;
-	m_RedTimer = 0;
+	beginGame();
 
 	return TRUE;
 }
@@ -127,7 +110,7 @@ void CChineseChessDlg::OnPaint()
 	m_BoardBmp.DeleteObject();
 }
 
-void CChineseChessDlg::OnButBegin() 
+void CChineseChessDlg::beginGame() 
 {
 	InitData();
 	m_SelectMoveFrom = NOMOVE;
@@ -137,16 +120,7 @@ void CChineseChessDlg::OnButBegin()
 	
 	m_Board.ClearBoard();
 	m_Board.StringToArray("rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w");
-	m_tsBlkTimeLeft = m_TotalTime;
-	m_BlkTimeLeft_Ctr.SetWindowText(m_tsBlkTimeLeft.Format("%H:%M:%S"));
-	m_tsBlkTimePass = m_TotalTime - m_tsBlkTimeLeft;
-	m_BlkTimePass_Ctr.SetWindowText(m_tsBlkTimePass.Format("%H:%M:%S"));
-	m_tsRedTimeLeft = m_tsBlkTimeLeft;
-	m_RedTimeLeft_Ctr.SetWindowText(m_tsRedTimeLeft.Format("%H:%M:%S"));
-	m_tsRedTimePass = m_TotalTime - m_tsRedTimeLeft;
-	m_RedTimePass_Ctr.SetWindowText(m_tsRedTimePass.Format("%H:%M:%S"));
 
-	m_RedTimer = SetTimer(1, 1000, NULL);
 	m_gameState = REDTHINKING;
 }
 
@@ -219,19 +193,16 @@ void CChineseChessDlg::OnLButtonDown(UINT nFlags, CPoint point)
 				RequireDrawCell(dest);
 				m_SelectMoveFrom = from;	//着重显示走法起始点
 				RequireDrawCell(from);		//将源点及目的点重新显示
-				Beep(200,300);
 
 				//判断胜负
 				num = m_Board.HasLegalMove();
 				if (!num)
 				{
-					KillTimer(m_RedTimer);
 					m_gameState = GAMEOVER;
 					MessageBox("红方获胜", "系统消息");
 					return;
 				}
 
-				KillTimer(m_RedTimer);
 				m_gameState = BLACKTHINKING;
 
 				PostMessage(WM_COMMAND, IDM_LET_COMPUTERTHINK);
@@ -279,17 +250,6 @@ void CChineseChessDlg::OnLetComputerThink()
 
 	m_Board.ComputerThink();
 
-	m_tsBlkTimePass = m_tsBlkTimePass + (CTime::GetCurrentTime() - t1);
-	if(m_tsBlkTimePass > m_TotalTime)
-	{
-		m_gameState = GAMEOVER;
-		if(m_RedTimer)
-		{
-			KillTimer(m_RedTimer);
-		}
-		MessageBox("黑方超时判负", "系统提示");
-		return;
-	}
 
 	short z = m_Board.BestMove.from;
 	short k = m_Board.BestMove.to;
@@ -297,10 +257,6 @@ void CChineseChessDlg::OnLetComputerThink()
 	if(z == 0)
 	{
 		m_gameState = GAMEOVER;
-		if(m_RedTimer)
-		{
-			KillTimer(m_RedTimer);
-		}
 		MessageBox("黑方认输，红方获胜", "系统提示");
 		return;
 	}
@@ -327,55 +283,16 @@ void CChineseChessDlg::OnLetComputerThink()
 	m_SelectMoveTo = kk;
 	RequireDrawCell(zz); 
 	RequireDrawCell(kk);
-	Beep(500, 300);
-
-	m_tsBlkTimeLeft = m_TotalTime - m_tsBlkTimePass;
-	m_BlkTimeLeft_Ctr.SetWindowText(m_tsBlkTimeLeft.Format("%H:%M:%S"));
-	m_BlkTimePass_Ctr.SetWindowText(m_tsBlkTimePass.Format("%H:%M:%S"));
 
 	num = m_Board.HasLegalMove();
 	if (!num)
 	{
-		KillTimer(m_RedTimer);
 		m_gameState = GAMEOVER;
-		Beep(700,1000);
 		MessageBox("黑方获胜", "系统消息");
 		return;
 	}
 
 	m_gameState = REDTHINKING;
-	m_RedTimer = SetTimer(1,1000,NULL);
-}
-
-void CChineseChessDlg::OnTimer(UINT nIDEvent) 
-{
-	switch(nIDEvent)
-	{
-		case 2:
-			m_tsBlkTimePass =  m_tsBlkTimePass + CTimeSpan(0,0,0,1);
-			m_tsBlkTimeLeft = m_TotalTime - m_tsBlkTimePass;
-			m_BlkTimeLeft_Ctr.SetWindowText(m_tsBlkTimeLeft.Format("%H:%M:%S"));
-			m_BlkTimePass_Ctr.SetWindowText(m_tsBlkTimePass.Format("%H:%M:%S"));
-			break;
-		case 1:
-			m_tsRedTimePass =  m_tsRedTimePass + CTimeSpan(0,0,0,1);
-			if(m_tsRedTimePass > m_TotalTime)
-			{
-				m_gameState = GAMEOVER;
-				KillTimer(m_RedTimer);
-				MessageBox("红方超时判负", "系统提示");
-			}
-			else
-			{
-				m_tsRedTimeLeft = m_TotalTime - m_tsRedTimePass;
-				m_RedTimeLeft_Ctr.SetWindowText(m_tsRedTimeLeft.Format("%H:%M:%S"));
-				m_RedTimePass_Ctr.SetWindowText(m_tsRedTimePass.Format("%H:%M:%S"));
-			}
-			break;
-		default:
-			break;
-	}
-	CDialog::OnTimer(nIDEvent);
 }
 
 void CChineseChessDlg::InitData()

@@ -10,7 +10,7 @@
 
 #define	SIZE_X			9
 #define	SIZE_Y			10
-#define BOARD_SIZE		SIZE_X*SIZE_Y
+#define BOARD_SIZE		SIZE_X * SIZE_Y
 #define NOMOVE			-1
 #define EMPTY			7
 #define BLACK			1
@@ -39,13 +39,10 @@ public:
 	void RequireDrawCell(short pos);	//重绘棋盘上的一点
 	short GetPiecePos(POINT pt);		//鼠标点对应的棋盘位置
 	BOOL IsPtInBoard(CPoint point);		//鼠标点是否在棋盘内
+	void beginGame();
 
 	//{{AFX_DATA(CChineseChessDlg)
 	enum { IDD = IDD_CHINESECHESS_DIALOG };
-	CStatic	m_RedTimePass_Ctr;
-	CStatic	m_RedTimeLeft_Ctr;
-	CStatic	m_BlkTimePass_Ctr;
-	CStatic	m_BlkTimeLeft_Ctr;
 	CButton	m_ButBegin;
 	//}}AFX_DATA
 
@@ -60,10 +57,8 @@ protected:
 	//{{AFX_MSG(CChineseChessDlg)
 	virtual BOOL OnInitDialog();
 	afx_msg void OnPaint();
-	afx_msg void OnButBegin();
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnLetComputerThink();
-	afx_msg void OnTimer(UINT nIDEvent);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
@@ -73,21 +68,12 @@ private:
 	int m_nBoardWidth;		//棋盘位图的宽
 	int m_nBoardHeight;		//棋盘位图的高
 
-	//时间控制相关的变量
-	CTimeSpan m_tsBlkTimeLeft;
-	CTimeSpan m_tsRedTimeLeft;
-	CTimeSpan m_tsBlkTimePass;
-	CTimeSpan m_tsRedTimePass;
-	CTimeSpan m_TotalTime;
-	UINT m_BlkTimer;
-	UINT m_RedTimer;
-
 	CBoard m_Board;
 
 	//界面显示控制变量
 	CRect rectBoard;				//棋盘矩形框
-	short m_SelectMoveFrom;			//一个走法的起始点，用于高亮显示
-	short m_SelectMoveTo;
+	short m_SelectMoveFrom;			//一个走法的起点，用于高亮显示
+	short m_SelectMoveTo;			//一个走法的始点，用于高亮显示
 	short m_HumanSide;
 	BYTE  m_interface[BOARD_SIZE];	//棋盘数组，保存的棋子
 	short m_gameState;				//棋局状态，结束/红方/黑方

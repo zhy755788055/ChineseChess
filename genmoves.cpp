@@ -175,20 +175,22 @@ int CBoard::Check(int lSide)
 	
 	//检测将是否被炮攻击
 	int OverFlag = 0;	//翻山标志
-	for(i=9;i<=10;i++)
+	for(i=9; i <= 10; i++)
 	{
 		p = piece[SideTag + i];
 		if(!p)
 			continue;
-		if(p%16 == q%16)	//在同一纵线上
+		if(p % 16 == q % 16)	//在同一纵线上
 		{
-			PosAdd = (p>q?-16:16);
-			for(p=p+PosAdd; p!=q; p = p+PosAdd)
+			PosAdd = (p > q? -16 : 16);
+			for(p=p + PosAdd; p != q; p = p + PosAdd)
 			{
 				if(board[p])
 				{
 					if(!OverFlag)	//隔一子
+					{
 						OverFlag = 1;
+					}
 					else			//隔两子
 					{
 						OverFlag = 2;
@@ -196,18 +198,22 @@ int CBoard::Check(int lSide)
 					}
 				}
 			}
-			if(OverFlag==1)
+			if(OverFlag == 1)
+			{
 				return 1;
+			}
 		}
-		else if(p/16 ==q/16)	//在同一横线上
+		else if(p / 16 == q / 16)	//在同一横线上
 		{
-			PosAdd = (p>q?-1:1);
-			for(p=p+PosAdd; p!=q; p = p+PosAdd)
+			PosAdd = (p>q? -1 : 1);
+			for(p=p + PosAdd; p != q; p = p + PosAdd)
 			{
 				if(board[p])
 				{
 					if(!OverFlag)
+					{
 						OverFlag = 1;
+					}
 					else
 					{
 						OverFlag = 2;
@@ -216,7 +222,9 @@ int CBoard::Check(int lSide)
 				}
 			}
 			if(OverFlag==1)
+			{
 				return 1;
+			}
 		}
 	}
 
@@ -225,7 +233,9 @@ int CBoard::Check(int lSide)
 	{
 		p = piece[SideTag + i];
 		if(!p)
+		{
 			continue;
+		}
 		for(k=0; k<3; k++)//3个方向
 		{
 			n = p + PawnDir[fSide][k];	//n为新的可能走到的位置
@@ -246,7 +256,9 @@ int CBoard::SaveMove(unsigned char from, unsigned char to,move * mv)
 	p = board[to];
 	piece[board[from]] = to;
 	if(p)
+	{
 		piece[p]=0;
+	}
 	board[to] = board[from];
 	board[from] = 0;
 
@@ -255,7 +267,9 @@ int CBoard::SaveMove(unsigned char from, unsigned char to,move * mv)
 	board[to] = p;
 	piece[board[from]] = from;
 	if(p)
+	{
 		piece[p] = to;
+	}
 
 	if(!r)
 	{
@@ -280,7 +294,9 @@ int CBoard::GenAllMove(move * MoveArray)
 	
 	p = piece[SideTag];	//将的位置
 	if(!p)
+	{
 		return 0;
+	}
 
 	//将的走法
 	for(k=0; k<4; k++)//4个方向
@@ -303,7 +319,9 @@ int CBoard::GenAllMove(move * MoveArray)
 	{
 		p = piece[SideTag + i];
 		if(!p)
+		{
 			continue;
+		}
 		for(k=0; k<4; k++)//4个方向
 		{
 			n = p + AdvisorDir[k];	//n为新的可能走到的位置
@@ -419,31 +437,45 @@ int CBoard::GenAllMove(move * MoveArray)
 	{
 		p = piece[SideTag + i];
 		if(!p)
+		{
 			continue;
-		for(k=0; k<4; k++)	//4个方向
+		}
+		for(k=0; k < 4; k++)	//4个方向
 		{
 			OverFlag = 0;
 			for(j=1; j<10; j++)	//横的最多有8个可能走的位置，纵向最多有9个位置
 			{
 				n = p + j * CannonDir[k];
 				if(!(LegalPosition[side][n] & PositionMask[5]))	//炮士将对应下标为5
+				{
 					break;//不合理的位置
+				}
 				if(! board[n] )	//目标位置上无子
 				{
 					if(!OverFlag)	//未翻山
+					{
 						if(SaveMove(p, n, mvArray))
+						{
 							mvArray++;
+						}
+					}
 					//已翻山则不作处理，自动考察向下一个位置
 				}
 				else//目标位置上有子
 				{
 					if (!OverFlag)	//未翻山则置翻山标志
+					{
 						OverFlag = 1;
+					}
 					else	//已翻山
 					{
 						if(! (board[n] & SideTag))//对方棋子
+						{
 							if(SaveMove(p, n, mvArray))
+							{
 								mvArray++;
+							}
+						}
 						break;	//不论吃不吃子，都退出此方向搜索
 					}
 				}
@@ -456,15 +488,21 @@ int CBoard::GenAllMove(move * MoveArray)
 	{
 		p = piece[SideTag + i];
 		if(!p)
+		{
 			continue;
+		}
 		for(k=0; k<3; k++)//3个方向
 		{
 			n = p + PawnDir[side][k];	//n为新的可能走到的位置
 			if(LegalPosition[side][n] & PositionMask[6])	//兵士将对应下标为6
 			{
 				if( !(board[n] & SideTag))	//目标位置上没有本方棋子
+				{
 					if(SaveMove(p, n, mvArray))
+					{
 						mvArray++;
+					}
+				}
 			}
 		}
 	}
