@@ -14,11 +14,33 @@ static char THIS_FILE[] = __FILE__;
 #define GRILLEHEIGHT 35 //棋盘上每个格子的宽度
 
 CChineseChessDlg::CChineseChessDlg(CWnd* pParent /*=NULL*/)
-: CDialog(CChineseChessDlg::IDD, pParent)
+:CDialog(CChineseChessDlg::IDD, pParent)
+,m_pobjDc(NULL)
+,m_pChessBoardBits(NULL)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 	m_SelectMoveFrom = NOMOVE;
 	m_SelectMoveTo = NOMOVE;
+}
+
+CChineseChessDlg::~CChineseChessDlg()
+{
+	m_objMemDc.SelectObject(m_pobjOldBmp);
+	m_objMemDc.DeleteDC();
+
+	m_pobjDc->DeleteDC();
+	m_pobjDc = NULL;
+
+	int sum = m_objChessman.GetImageCount();
+	for(int i = 0; i < sum; i++)
+	{
+		m_objChessman.Remove(0);
+	}
+
+	if (m_pChessBoardBits != NULL)
+	{
+		delete m_pChessBoardBits;
+	}
 }
 
 void CChineseChessDlg::DoDataExchange(CDataExchange* pDX)
@@ -44,20 +66,34 @@ BOOL CChineseChessDlg::OnInitDialog()
 	//  when the application's main window is not a dialog
 	SetIcon(m_hIcon, TRUE);			// Set big icon
 	SetIcon(m_hIcon, FALSE);		// Set small icon
-	
+
 	BITMAP BitMap;
+	m_pobjDc = new CClientDC(this);
+	m_objMemDc.CreateCompatibleDC(m_pobjDc);
+	CBitmap m_BoardBmp;		//棋盘位图
 	m_BoardBmp.LoadBitmap(IDB_CHESSBOARD);
 	m_BoardBmp.GetBitmap(&BitMap);
 	m_nBoardWidth  = BitMap.bmWidth;
 	m_nBoardHeight = BitMap.bmHeight;
+
+	m_pChessBoardBits = new unsigned char[m_nBoardWidth * m_nBoardHeight * 4];
+	if (m_pChessBoardBits == NULL)
+	{
+		return FALSE;
+	}
+
+	m_BoardBmp.GetBitmapBits(m_nBoardWidth * m_nBoardHeight * 4, m_pChessBoardBits);
 	m_BoardBmp.DeleteObject();
 
-	m_Chessman.Create(IDB_CHESSMAN, 31, 15, RGB(0,128,128)); 
+	m_objBoardMemBmp.CreateCompatibleBitmap(m_pobjDc, m_nBoardWidth, m_nBoardHeight);
+	m_pobjOldBmp = m_objMemDc.SelectObject(&m_objBoardMemBmp);
 
-	rectBoard.left = BORDERWIDTH;
-	rectBoard.right = BORDERWIDTH + GRILLEWIDTH * 9;
-	rectBoard.top = BORDERHEIGHT;
-	rectBoard.bottom = BORDERHEIGHT + GRILLEHEIGHT * 10;
+	m_objChessman.Create(IDB_CHESSMAN, 31, 15, RGB(0,128,128));
+
+	m_objRectBoard.left = BORDERWIDTH;
+	m_objRectBoard.right = BORDERWIDTH + GRILLEWIDTH * 9;
+	m_objRectBoard.top = BORDERHEIGHT;
+	m_objRectBoard.bottom = BORDERHEIGHT + GRILLEHEIGHT * 10;
 
 	InitData();
 	beginGame();
@@ -67,16 +103,12 @@ BOOL CChineseChessDlg::OnInitDialog()
 
 void CChineseChessDlg::OnPaint() 
 {
-	CPaintDC dc(this);
-	CDC MemDC;
 	POINT pt;
-	CBitmap *pOldBmp;
 	int z;
-	
-	MemDC.CreateCompatibleDC( &dc );
-	m_BoardBmp.LoadBitmap(IDB_CHESSBOARD);
-	pOldBmp = MemDC.SelectObject(&m_BoardBmp);
-	for (short i=0; i < 90; i++)
+
+	m_objBoardMemBmp.SetBitmapBits(m_nBoardWidth * m_nBoardHeight * 4, m_pChessBoardBits);
+
+	for (short i = 0; i < 90; i++)
 	{
 		if (m_interface[i] == 0)
 		{
@@ -84,7 +116,7 @@ void CChineseChessDlg::OnPaint()
 			{
 				pt.x = (i % 9) * GRILLEHEIGHT + BORDERWIDTH ;
 				pt.y = (i / 9) * GRILLEWIDTH + BORDERHEIGHT;
-				m_Chessman.Draw(&MemDC, 14, pt, ILD_TRANSPARENT);
+				m_objChessman.Draw(&m_objMemDc, 14, pt, ILD_TRANSPARENT);
 			}
 			continue;
 		}
@@ -93,21 +125,21 @@ void CChineseChessDlg::OnPaint()
 		
 		z = IntToSubscript(m_interface[i]);
 		
-		m_Chessman.Draw(&MemDC, z, pt, ILD_TRANSPARENT);
+		m_objChessman.Draw(&m_objMemDc, z, pt, ILD_TRANSPARENT);
 		if(i == m_SelectMoveFrom)
 		{
-			m_Chessman.Draw(&MemDC, 14, pt, ILD_TRANSPARENT);
+			m_objChessman.Draw(&m_objMemDc, 14, pt, ILD_TRANSPARENT);
 		}
 		if(i == m_SelectMoveTo)
 		{
-			m_Chessman.Draw(&MemDC, 14, pt, ILD_TRANSPARENT);
+			m_objChessman.Draw(&m_objMemDc, 14, pt, ILD_TRANSPARENT);
 		}
 	}
 
-	dc.BitBlt(0, 0, m_nBoardWidth, m_nBoardHeight, &MemDC, 0, 0, SRCCOPY);
-	MemDC.SelectObject(&pOldBmp);
-	MemDC.DeleteDC();
-	m_BoardBmp.DeleteObject();
+	if (m_pobjDc != NULL)
+	{
+		m_pobjDc->BitBlt(0, 0, m_nBoardWidth, m_nBoardHeight, &m_objMemDc, 0, 0, SRCCOPY);
+	}
 }
 
 void CChineseChessDlg::beginGame() 
@@ -115,18 +147,18 @@ void CChineseChessDlg::beginGame()
 	InitData();
 	m_SelectMoveFrom = NOMOVE;
 	m_SelectMoveTo = NOMOVE;
-	InvalidateRect(&rectBoard, false);
+	InvalidateRect(&m_objRectBoard, false);
 	UpdateWindow();
 	
-	m_Board.ClearBoard();
-	m_Board.StringToArray("rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w");
+	m_objBoard.ClearBoard();
+	m_objBoard.StringToArray("rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w");
 
 	m_gameState = REDTHINKING;
 }
 
 BOOL CChineseChessDlg::IsPtInBoard(CPoint point)
 {
-	return rectBoard.PtInRect(point);
+	return m_objRectBoard.PtInRect(point);
 }
 
 void CChineseChessDlg::OnLButtonDown(UINT nFlags, CPoint point) 
@@ -140,7 +172,6 @@ void CChineseChessDlg::OnLButtonDown(UINT nFlags, CPoint point)
 
 	short dest;
 	short from;
-	int num;
 	
 	//清空高亮显示
 	from = m_SelectMoveFrom;
@@ -177,15 +208,15 @@ void CChineseChessDlg::OnLButtonDown(UINT nFlags, CPoint point)
 		//棋子落在空处或者他方的棋子上
 		if (from != NOMOVE)	//如果已经先选中本方棋子
 		{
-			move mv;
 			//将10*9的棋盘位置转换成16*16的棋盘位置
+			move mv;
 			mv.from = ((from / 9 + 3) * 16 + from % 9 + 3);
 			mv.to = ((dest / 9 + 3) * 16 + dest % 9 + 3);
 
 			//走法合理性检验，源位置z，目的位置k
-			if (m_Board.LegalMove(mv)) 
+			if (m_objBoard.LegalMove(mv)) 
 			{
-				m_Board.MakeMove(mv);
+				m_objBoard.MakeMove(mv);
 				m_interface[dest] = m_interface[from];
 				m_interface[from] = 0;
 
@@ -195,11 +226,11 @@ void CChineseChessDlg::OnLButtonDown(UINT nFlags, CPoint point)
 				RequireDrawCell(from);		//将源点及目的点重新显示
 
 				//判断胜负
-				num = m_Board.HasLegalMove();
-				if (!num)
+				bool bIsHasLegalMove = m_objBoard.HasLegalMove();
+				if (!bIsHasLegalMove)
 				{
 					m_gameState = GAMEOVER;
-					MessageBox("红方获胜", "系统消息");
+					MessageBox("恭喜你赢了", "系统消息");
 					return;
 				}
 
@@ -214,13 +245,13 @@ void CChineseChessDlg::OnLButtonDown(UINT nFlags, CPoint point)
 
 short CChineseChessDlg::GetPiecePos(POINT pt)
 {
-	if (!rectBoard.PtInRect(pt))
+	if (!m_objRectBoard.PtInRect(pt))
 	{
 		return -1;
 	}
 
-	short x = (pt.x-rectBoard.left) / GRILLEWIDTH;
-	short y = (pt.y-rectBoard.top)  / GRILLEHEIGHT;
+	short x = (pt.x-m_objRectBoard.left) / GRILLEWIDTH;
+	short y = (pt.y-m_objRectBoard.top)  / GRILLEHEIGHT;
 
 	return x + y * 9;
 }
@@ -246,23 +277,20 @@ void CChineseChessDlg::OnLetComputerThink()
 	{
 		return;
 	}
-	CTime t1 = CTime::GetCurrentTime();
 
-	m_Board.ComputerThink();
+	m_objBoard.ComputerThink();
 
-
-	short z = m_Board.BestMove.from;
-	short k = m_Board.BestMove.to;
+	short z = m_objBoard.BestMove.from;
+	short k = m_objBoard.BestMove.to;
 
 	if(z == 0)
 	{
 		m_gameState = GAMEOVER;
-		MessageBox("黑方认输，红方获胜", "系统提示");
+		MessageBox("恭喜你赢了", "系统消息");
 		return;
 	}
 
-	int num;
-	m_Board.MakeMove(m_Board.BestMove);
+	m_objBoard.MakeMove(m_objBoard.BestMove);
 
 	//清空高亮显示
 	short zz = m_SelectMoveFrom;
@@ -284,11 +312,11 @@ void CChineseChessDlg::OnLetComputerThink()
 	RequireDrawCell(zz); 
 	RequireDrawCell(kk);
 
-	num = m_Board.HasLegalMove();
-	if (!num)
+	bool bIsHasLegalMove = m_objBoard.HasLegalMove();
+	if (!bIsHasLegalMove)
 	{
 		m_gameState = GAMEOVER;
-		MessageBox("黑方获胜", "系统消息");
+		MessageBox("你输了", "系统消息");
 		return;
 	}
 
@@ -297,7 +325,7 @@ void CChineseChessDlg::OnLetComputerThink()
 
 void CChineseChessDlg::InitData()
 {
-	static BYTE board[BOARD_SIZE] = 
+	static const unsigned char board[BOARD_SIZE] = 
 	{
 		39, 37, 35, 33, 32, 34, 36, 38, 40,
 		0, 0, 0, 0, 0, 0, 0, 0, 0,

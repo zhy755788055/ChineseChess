@@ -31,6 +31,7 @@ class CChineseChessDlg : public CDialog
 {
 public:
 	CChineseChessDlg(CWnd* pParent = NULL);
+	~CChineseChessDlg();
 
 public:
 	int IntToSubscript(int a);			//棋子整数值转换成下标表示，用于界面显示,返回值：0：红方获胜，1黑方获胜，-1未分胜负
@@ -63,19 +64,24 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 private:
-	CBitmap m_BoardBmp;		//棋盘位图
-	CImageList m_Chessman;	//棋子图列表
-	int m_nBoardWidth;		//棋盘位图的宽
-	int m_nBoardHeight;		//棋盘位图的高
+	unsigned char *m_pChessBoardBits;	//内存棋盘位图
+	CImageList m_objChessman;			//棋子图列表
+	int m_nBoardWidth;					//棋盘位图的宽
+	int m_nBoardHeight;					//棋盘位图的高
 
-	CBoard m_Board;
+	CClientDC* m_pobjDc;
+	CBitmap m_objBoardMemBmp;			//用于画棋盘和棋子的内存图
+	CDC m_objMemDc;
+	CBitmap* m_pobjOldBmp;
+
+	CBoard m_objBoard;
 
 	//界面显示控制变量
-	CRect rectBoard;				//棋盘矩形框
-	short m_SelectMoveFrom;			//一个走法的起点，用于高亮显示
-	short m_SelectMoveTo;			//一个走法的始点，用于高亮显示
+	CRect m_objRectBoard;				//棋盘矩形框
+	short m_SelectMoveFrom;				//一个走法的起点，用于高亮显示
+	short m_SelectMoveTo;				//一个走法的始点，用于高亮显示
 	short m_HumanSide;
-	BYTE  m_interface[BOARD_SIZE];	//棋盘数组，保存的棋子
-	short m_gameState;				//棋局状态，结束/红方/黑方
+	BYTE  m_interface[BOARD_SIZE];		//棋盘数组，保存的棋子
+	short m_gameState;					//棋局状态，结束/红方/黑方
 };
 #endif

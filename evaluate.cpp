@@ -11,20 +11,20 @@ const short PieceValue[48] =
 short CBoard::Eval(void)
 {
 	int i;
-	short bValue,wValue;
+	short bValue = 0;
+	short wValue = 0;
 
-	bValue = wValue = 0;
-	for(i=16; i<32; i++)
+	for(i = 16; i < 32; i++)
 	{
-		if(piece[i]>0)
+		if(piece[i] > 0)
 		{
 			wValue = wValue + PieceValue[i];
 		}
 	}
 
-	for(i=32; i<48; i++)
+	for(i = 32; i < 48; i++)
 	{
-		if(piece[i]>0)
+		if(piece[i] > 0)
 		{
 			bValue = bValue + PieceValue[i];
 		}

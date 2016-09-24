@@ -36,8 +36,8 @@ public:
 	int SaveMove(unsigned char from, unsigned char to,move * mv);//保存生成的走法,成功返回1，失败返回0
 	int GenAllMove(move * MoveArray);	//生成所有的走法
 	int Check(int lSide);				//检测lSide一方是否被将军，是被将军返回1，否则返回0
-	int LegalMove(move mv);				//判断走法是否合理
-	int HasLegalMove();					//判断当前局面是否有合理走法，没有则判输
+	bool LegalMove(move mv);				//判断走法是否合理
+	bool HasLegalMove();					//判断当前局面是否有合理走法，没有则判输
 
 	// 评估函数
 	short Eval();						// 评估函数

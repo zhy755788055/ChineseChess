@@ -79,10 +79,10 @@ int CBoard::Check(int lSide)
 	}
 
 	//检测将帅是否照面
-	r=1;
-	if(wKing%16 == bKing%16)
+	r = 1;
+	if(wKing % 16 == bKing % 16)
 	{
-		for(wKing=wKing-16; wKing!=bKing; wKing=wKing-16)
+		for(wKing = wKing - 16; wKing != bKing; wKing = wKing - 16)
 		{
 			if(board[wKing])	
 			{
@@ -96,7 +96,7 @@ int CBoard::Check(int lSide)
 		}
 	}
 
-	q = piece[48-SideTag];	//lSide方将的位置
+	q = piece[48 - SideTag];	//lSide方将的位置
 
 	//检测将是否被马攻击
 	int k;
@@ -113,7 +113,7 @@ int CBoard::Check(int lSide)
 		for(k = 0; k < 8; k++)//8个方向
 		{
 			n = p + KnightDir[k];	//n为新的可能走到的位置
-			if(n!=q)
+			if(n != q)
 			{
 				continue;
 			}
@@ -130,8 +130,8 @@ int CBoard::Check(int lSide)
 	}
 	
 	//检测将是否被车攻击
-	r=1;
-	for(i=7;i<=8;i++)
+	r = 1;
+	for(i = 7; i <= 8; i++)
 	{
 		p = piece[SideTag + i];
 		if(!p)
@@ -141,12 +141,12 @@ int CBoard::Check(int lSide)
 
 		if(p % 16 == q % 16)	//在同一纵线上
 		{
-			PosAdd = (p > q?-16:16);
+			PosAdd = (p > q? -16 : 16);
 			for(p=p + PosAdd; p != q; p = p + PosAdd)
 			{
 				if(board[p])	//车将中间有子隔着
 				{
-					r=0;
+					r = 0;
 					break;
 				}
 			}
@@ -157,7 +157,7 @@ int CBoard::Check(int lSide)
 		}
 		else if(p / 16 == q / 16)	//在同一横线上
 		{
-			PosAdd = (p > q?-1:1);
+			PosAdd = (p > q? -1 : 1);
 			for(p = p + PosAdd; p != q; p = p + PosAdd)
 			{
 				if(board[p])
@@ -179,11 +179,14 @@ int CBoard::Check(int lSide)
 	{
 		p = piece[SideTag + i];
 		if(!p)
+		{
 			continue;
+		}
+
 		if(p % 16 == q % 16)	//在同一纵线上
 		{
 			PosAdd = (p > q? -16 : 16);
-			for(p=p + PosAdd; p != q; p = p + PosAdd)
+			for(p = p + PosAdd; p != q; p = p + PosAdd)
 			{
 				if(board[p])
 				{
@@ -206,7 +209,7 @@ int CBoard::Check(int lSide)
 		else if(p / 16 == q / 16)	//在同一横线上
 		{
 			PosAdd = (p>q? -1 : 1);
-			for(p=p + PosAdd; p != q; p = p + PosAdd)
+			for(p = p + PosAdd; p != q; p = p + PosAdd)
 			{
 				if(board[p])
 				{
@@ -229,17 +232,17 @@ int CBoard::Check(int lSide)
 	}
 
 	//检测将是否被兵攻击
-	for(i=11; i <= 15; i++)
+	for(i = 11; i <= 15; i++)
 	{
 		p = piece[SideTag + i];
 		if(!p)
 		{
 			continue;
 		}
-		for(k=0; k<3; k++)//3个方向
+		for(k = 0; k < 3; k++)//3个方向
 		{
 			n = p + PawnDir[fSide][k];	//n为新的可能走到的位置
-			if((n==q) && (LegalPosition[fSide][n] & PositionMask[6]))	//兵士将对应下标为6
+			if((n == q) && (LegalPosition[fSide][n] & PositionMask[6]))	//兵士将对应下标为6
 			{
 				return 1;
 			}
@@ -257,12 +260,13 @@ int CBoard::SaveMove(unsigned char from, unsigned char to,move * mv)
 	piece[board[from]] = to;
 	if(p)
 	{
-		piece[p]=0;
+		piece[p] = 0;
 	}
+
 	board[to] = board[from];
 	board[from] = 0;
 
-	int r =Check(side);
+	int r = Check(side);
 	board[from] = board[to];
 	board[to] = p;
 	piece[board[from]] = from;
@@ -304,7 +308,7 @@ int CBoard::GenAllMove(move * MoveArray)
 		n = p + KingDir[k];	//n为新的可能走到的位置
 		if(LegalPosition[side][n] & PositionMask[0])	//将对应下标为0
 		{
-			if( !(board[n] & SideTag))	//目标位置上没有本方棋子
+			if(!(board[n] & SideTag))	//目标位置上没有本方棋子
 			{
 				if(SaveMove(p, n, mvArray))
 				{
@@ -322,7 +326,7 @@ int CBoard::GenAllMove(move * MoveArray)
 		{
 			continue;
 		}
-		for(k=0; k<4; k++)//4个方向
+		for(k = 0; k < 4; k++)//4个方向
 		{
 			n = p + AdvisorDir[k];	//n为新的可能走到的位置
 			if(LegalPosition[side][n] & PositionMask[1])	//士将对应下标为1
@@ -339,12 +343,14 @@ int CBoard::GenAllMove(move * MoveArray)
 	}
 
 	//象的走法
-	for(i=3; i<=4; i++)
+	for(i = 3; i <= 4; i++)
 	{
 		p = piece[SideTag + i];
 		if(!p)
+		{
 			continue;
-		for(k=0; k<4; k++)//4个方向
+		}
+		for(k = 0; k < 4; k++)//4个方向
 		{
 			n = p + BishopDir[k];	//n为新的可能走到的位置
 			if(LegalPosition[side][n] & PositionMask[2])	//象将对应下标为2
@@ -352,7 +358,7 @@ int CBoard::GenAllMove(move * MoveArray)
 				m = p + BishopCheck[k];
 				if(!board[m])	//象眼位置无棋子占据
 				{
-					if( !(board[n] & SideTag))	//目标位置上没有本方棋子
+					if(!(board[n] & SideTag))	//目标位置上没有本方棋子
 					{
 						if(SaveMove(p, n, mvArray))
 						{
@@ -380,7 +386,7 @@ int CBoard::GenAllMove(move * MoveArray)
 				m = p + KnightCheck[k];
 				if(!board[m])	//马腿位置无棋子占据
 				{
-					if( !(board[n] & SideTag))	//目标位置上没有本方棋子
+					if(!(board[n] & SideTag))	//目标位置上没有本方棋子
 					{
 						if(SaveMove(p, n, mvArray))
 						{
@@ -409,14 +415,14 @@ int CBoard::GenAllMove(move * MoveArray)
 				{
 					break;//不合理的位置
 				}
-				if(! board[n] )	//目标位置上无子
+				if(!board[n])	//目标位置上无子
 				{
 					if(SaveMove(p, n, mvArray))
 					{
 						mvArray++;
 					}
 				}
-				else if ( board[n] & SideTag)	//目标位置上有本方棋子
+				else if (board[n] & SideTag)	//目标位置上有本方棋子
 				{
 					break;
 				}
@@ -433,24 +439,24 @@ int CBoard::GenAllMove(move * MoveArray)
 	}
 
 	//炮的走法
-	for(i=9; i<=10; i++)
+	for(i = 9; i <= 10; i++)
 	{
 		p = piece[SideTag + i];
 		if(!p)
 		{
 			continue;
 		}
-		for(k=0; k < 4; k++)	//4个方向
+		for(k = 0; k < 4; k++)	//4个方向
 		{
 			OverFlag = 0;
-			for(j=1; j<10; j++)	//横的最多有8个可能走的位置，纵向最多有9个位置
+			for(j = 1; j < 10; j++)	//横的最多有8个可能走的位置，纵向最多有9个位置
 			{
 				n = p + j * CannonDir[k];
 				if(!(LegalPosition[side][n] & PositionMask[5]))	//炮士将对应下标为5
 				{
 					break;//不合理的位置
 				}
-				if(! board[n] )	//目标位置上无子
+				if(!board[n])	//目标位置上无子
 				{
 					if(!OverFlag)	//未翻山
 					{
@@ -461,7 +467,7 @@ int CBoard::GenAllMove(move * MoveArray)
 					}
 					//已翻山则不作处理，自动考察向下一个位置
 				}
-				else//目标位置上有子
+				else	//目标位置上有子
 				{
 					if (!OverFlag)	//未翻山则置翻山标志
 					{
@@ -469,7 +475,7 @@ int CBoard::GenAllMove(move * MoveArray)
 					}
 					else	//已翻山
 					{
-						if(! (board[n] & SideTag))//对方棋子
+						if(!(board[n] & SideTag))//对方棋子
 						{
 							if(SaveMove(p, n, mvArray))
 							{
@@ -484,19 +490,19 @@ int CBoard::GenAllMove(move * MoveArray)
 	}
 
 	//兵的走法
-	for(i=11; i<=15; i++)
+	for(i = 11; i <= 15; i++)
 	{
 		p = piece[SideTag + i];
 		if(!p)
 		{
 			continue;
 		}
-		for(k=0; k<3; k++)//3个方向
+		for(k = 0; k < 3; k++)//3个方向
 		{
 			n = p + PawnDir[side][k];	//n为新的可能走到的位置
 			if(LegalPosition[side][n] & PositionMask[6])	//兵士将对应下标为6
 			{
-				if( !(board[n] & SideTag))	//目标位置上没有本方棋子
+				if(!(board[n] & SideTag))	//目标位置上没有本方棋子
 				{
 					if(SaveMove(p, n, mvArray))
 					{
@@ -509,7 +515,7 @@ int CBoard::GenAllMove(move * MoveArray)
 	return mvArray - MoveArray;
 }
 
-int CBoard::LegalMove(move mv)	//判断走法是否合理
+bool CBoard::LegalMove(move mv)	//判断走法是否合理
 {
 	move mvArray[128];
 	int num = GenAllMove(mvArray);
@@ -519,16 +525,24 @@ int CBoard::LegalMove(move mv)	//判断走法是否合理
 	{
 		if((mv.from == mvArray[i].from) && (mv.to == mvArray[i].to))
 		{
-			return 1;
+			return true;
 		}
 	}
-	return 0;
+	return false;
 }
 
 //判断当前局面是否有合理走法，没有则判输
-int CBoard::HasLegalMove()
+bool CBoard::HasLegalMove()
 {
 	move mvArray[128];
-	int num = GenAllMove(mvArray);;
-	return num;
+	int num = GenAllMove(mvArray);
+
+	if (num > 0)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }

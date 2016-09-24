@@ -108,7 +108,7 @@ void CBoard::ComputerThink()
 	BestMove.to = 0;
 
 	StackTop = 0;
-	ply =0;
+	ply = 0;
 	MaxDepth = 4;
-	AlphaBetaSearch(MaxDepth,-MaxValue, MaxValue);
+	AlphaBetaSearch(MaxDepth, -MaxValue, MaxValue);
 }

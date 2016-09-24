@@ -82,7 +82,7 @@ void CBoard::StringToArray(const char *FenStr)
 		if (*str == '/') 
 		{
 			j = 3;
-			i ++;
+			i++;
 			if (i > 12) 
 			{
 				break;
