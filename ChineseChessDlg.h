@@ -39,7 +39,6 @@ public:
 	CRect GetPieceRect(short pos);		//棋盘位置对应的矩形区域
 	void RequireDrawCell(short pos);	//重绘棋盘上的一点
 	short GetPiecePos(POINT pt);		//鼠标点对应的棋盘位置
-	BOOL IsPtInBoard(CPoint point);		//鼠标点是否在棋盘内
 	void beginGame();
 
 	//{{AFX_DATA(CChineseChessDlg)

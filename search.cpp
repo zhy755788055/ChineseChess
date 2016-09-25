@@ -24,7 +24,7 @@ bool CBoard::MakeMove(move m)
 	StackTop++; 
 
 	//设置棋子数组
-	if(p>0)
+	if(p > 0)
 	{
 		piece[p] = 0;
 	}
@@ -72,7 +72,6 @@ int CBoard::AlphaBetaSearch(int depth, int alpha, int beta)
 	int value;
 	move MoveArray[128];
 	move mv;
-	int i;
 
 	if(depth ==0)
 	{
@@ -80,7 +79,7 @@ int CBoard::AlphaBetaSearch(int depth, int alpha, int beta)
 	}
 
 	int num = GenAllMove(MoveArray);
-	for(i = 0 ; i<num; i++)
+	for(int i = 0 ; i < num; i++)
 	{
 		mv = MoveArray[i];
 		MakeMove(mv);
@@ -109,6 +108,6 @@ void CBoard::ComputerThink()
 
 	StackTop = 0;
 	ply = 0;
-	MaxDepth = 4;
+	MaxDepth = 5;
 	AlphaBetaSearch(MaxDepth, -MaxValue, MaxValue);
 }

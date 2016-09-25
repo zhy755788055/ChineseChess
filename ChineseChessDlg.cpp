@@ -142,13 +142,35 @@ void CChineseChessDlg::OnPaint()
 	}
 }
 
+void CChineseChessDlg::InitData()
+{
+	static const unsigned char board[BOARD_SIZE] = 
+	{
+		39, 37, 35, 33, 32, 34, 36, 38, 40,
+		0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 41, 0, 0, 0, 0, 0, 42, 0,
+		43, 0, 44, 0, 45, 0, 46, 0, 47,
+		0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0,
+		27, 0, 28, 0, 29, 0, 30, 0, 31,
+		0, 25, 0, 0, 0, 0, 0, 26, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0,
+		23, 21, 19, 17, 16, 18, 20, 22, 24
+	};
+
+	for (int i = 0; i < BOARD_SIZE; i++) 
+	{
+		m_interface[i] = board[i];
+	}
+
+	m_HumanSide = 0;
+	m_gameState = GAMEOVER;
+}
+
 void CChineseChessDlg::beginGame() 
 {
-	InitData();
 	m_SelectMoveFrom = NOMOVE;
 	m_SelectMoveTo = NOMOVE;
-	InvalidateRect(&m_objRectBoard, false);
-	UpdateWindow();
 	
 	m_objBoard.ClearBoard();
 	m_objBoard.StringToArray("rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w");
@@ -156,26 +178,19 @@ void CChineseChessDlg::beginGame()
 	m_gameState = REDTHINKING;
 }
 
-BOOL CChineseChessDlg::IsPtInBoard(CPoint point)
-{
-	return m_objRectBoard.PtInRect(point);
-}
-
 void CChineseChessDlg::OnLButtonDown(UINT nFlags, CPoint point) 
 {
-	if (!IsPtInBoard(point) || m_gameState != REDTHINKING)
+	bool bInRect = m_objRectBoard.PtInRect(point);
+	if (!bInRect || m_gameState != REDTHINKING)
 	{
 		return;
 	}
 
 	int SideTag = 16 + m_HumanSide * 16;
 
-	short dest;
-	short from;
-	
 	//Çå¿Õ¸ßÁÁÏÔÊ¾
-	from = m_SelectMoveFrom;
-	dest = m_SelectMoveTo;
+	short from = m_SelectMoveFrom;
+	short dest = m_SelectMoveTo;
 	m_SelectMoveTo = NOMOVE;
 	m_SelectMoveFrom = NOMOVE;
 	if(from != NOMOVE)
@@ -250,8 +265,8 @@ short CChineseChessDlg::GetPiecePos(POINT pt)
 		return -1;
 	}
 
-	short x = (pt.x-m_objRectBoard.left) / GRILLEWIDTH;
-	short y = (pt.y-m_objRectBoard.top)  / GRILLEHEIGHT;
+	short x = (pt.x - m_objRectBoard.left) / GRILLEWIDTH;
+	short y = (pt.y - m_objRectBoard.top)  / GRILLEHEIGHT;
 
 	return x + y * 9;
 }
@@ -323,34 +338,9 @@ void CChineseChessDlg::OnLetComputerThink()
 	m_gameState = REDTHINKING;
 }
 
-void CChineseChessDlg::InitData()
-{
-	static const unsigned char board[BOARD_SIZE] = 
-	{
-		39, 37, 35, 33, 32, 34, 36, 38, 40,
-		0, 0, 0, 0, 0, 0, 0, 0, 0,
-		0, 41, 0, 0, 0, 0, 0, 42, 0,
-		43, 0, 44, 0, 45, 0, 46, 0, 47,
-		0, 0, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 0, 0,
-		27, 0, 28, 0, 29, 0, 30, 0, 31,
-		0, 25, 0, 0, 0, 0, 0, 26, 0,
-		0, 0, 0, 0, 0, 0, 0, 0, 0,
-		23, 21, 19, 17, 16, 18, 20, 22, 24
-	};
-
-	for (int i = 0; i < BOARD_SIZE; i++) 
-	{
-		m_interface[i] = board[i];
-	}
-
-	m_HumanSide = 0;
-	m_gameState = GAMEOVER;
-}
-
 int CChineseChessDlg::IntToSubscript(int a)
 {
-	if(a<16 && a>=48)
+	if(a < 16 && a >= 48)
 	{
 		return 14;
 	}

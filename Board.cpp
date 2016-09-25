@@ -12,7 +12,7 @@ CBoard::CBoard()
 {
 	StackTop = 0;
 	ply =0;
-	MaxDepth = 4;
+	MaxDepth = 5;
 }
 
 CBoard::~CBoard()

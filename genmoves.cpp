@@ -319,7 +319,7 @@ int CBoard::GenAllMove(move * MoveArray)
 	}
 
 	//士的走法
-	for(i=1; i<=2; i++)
+	for(i = 1; i <= 2; i++)
 	{
 		p = piece[SideTag + i];
 		if(!p)
@@ -331,7 +331,7 @@ int CBoard::GenAllMove(move * MoveArray)
 			n = p + AdvisorDir[k];	//n为新的可能走到的位置
 			if(LegalPosition[side][n] & PositionMask[1])	//士将对应下标为1
 			{
-				if( !(board[n] & SideTag))	//目标位置上没有本方棋子
+				if(!(board[n] & SideTag))	//目标位置上没有本方棋子
 				{
 					if(SaveMove(p, n, mvArray))
 					{
@@ -371,7 +371,7 @@ int CBoard::GenAllMove(move * MoveArray)
 	}
 	
 	//马的走法
-	for(i=5; i<=6; i++)
+	for(i = 5; i <= 6; i++)
 	{
 		p = piece[SideTag + i];
 		if(!p)
@@ -520,8 +520,7 @@ bool CBoard::LegalMove(move mv)	//判断走法是否合理
 	move mvArray[128];
 	int num = GenAllMove(mvArray);
 
-	int i;
-	for(i = 0; i < num; i++)
+	for(int i = 0; i < num; i++)
 	{
 		if((mv.from == mvArray[i].from) && (mv.to == mvArray[i].to))
 		{
